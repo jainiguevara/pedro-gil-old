@@ -7,18 +7,13 @@
 
 var bcrypt = require('bcrypt');
 module.exports = {
-
+  connection: 'ML_txTracking',
   attributes: {
     id : { 
       type: 'integer',
       //autoincrement: true,
       primaryKey : true,
       columnName: 'the_primary_key'
-    },
-    
-    employeeID : { 
-      type: 'string',
-      required: true
     },
     
     firstName : { 
@@ -39,6 +34,11 @@ module.exports = {
     email : { 
       type: 'email', 
       unique: true
+    },
+    
+    username : { 
+      type: 'string',
+      required: true
     },
     
     password : { 

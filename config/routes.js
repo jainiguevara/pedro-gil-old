@@ -31,33 +31,29 @@ module.exports.routes = {
   * `assets` directory)                                                      *
   *                                                                          *
   ***************************************************************************/
-
-  // '/': {
-  //   view: 'index',
-  //   locals: 
-  //   {
-  //     layout: 'layout',
-  //     title: 'Dashboard'
-  //   }
-  //     },
       
-    '/': {
-    view: 'login',
+  '/': 'PageController.marshallHomepage',
+      
+  'GET /dashboard': {
+    view: 'private/index',
     locals: 
     {
-      layout: 'layout-home',
+      layout: 'private/layout',
+      title: 'Dashboard'
+    }
+      },
+      
+  'GET /login': {
+    view: 'public/login',
+    locals: 
+    {
+      layout: 'public/layout',
       title: 'Login'
     }
       },
       
-  '/login': {
-    view: 'login',
-    locals: 
-    {
-      layout: 'layout-home',
-      title: 'Login'
-    }
-      }
+  /* JSON API */
+  'PUT /login' : 'UserController.login' 
 
   /***************************************************************************
   *                                                                          *
