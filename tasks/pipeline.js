@@ -24,7 +24,9 @@ var cssFilesToInject = [
   //Morris Charts CSS
   'styles/plugins/morris.css',
   //Custom Fonts
- 'font-awesome/css/font-awesome.min.css'
+ 'font-awesome/css/font-awesome.min.css',
+ //Data Tables
+ 'styles/datatables.min.css',
 ];
 
 
@@ -49,7 +51,16 @@ var jsFilesToInject = [
   //Morris Charts JavaScript -->
   'js/plugins/morris/raphael.min.js',
   'js/plugins/morris/morris.min.js',
-  'js/plugins/morris/morris-data.js'
+  'js/plugins/morris/morris-data.js',
+  //Dialog Box
+  'js/bootstrap-waitingfor.js',
+  //Data Tables
+  'js/datatables.jquery.js',
+  'js/datatables.bootstrap.js',
+  'js/front-end.js',
+  // 'js/typeahead/typeahead.bundle.js',
+  // 'js/typeahead/bloodhound.js',
+  // 'js/typeahead/test-action.js'
 ];
 
 

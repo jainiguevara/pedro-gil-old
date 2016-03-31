@@ -89,7 +89,10 @@ module.exports.views = {
   *                                                                           *
   ****************************************************************************/
 
-  partials: false
+  partials: false,
 
+  // locals: {
+  //   emp : ''
+  // }
 
 };

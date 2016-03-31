@@ -9,12 +9,6 @@ var bcrypt = require('bcrypt');
 module.exports = {
   connection: 'ML_txTracking',
   attributes: {
-    id : { 
-      type: 'integer',
-      //autoincrement: true,
-      primaryKey : true,
-      columnName: 'the_primary_key'
-    },
     
     firstName : { 
       type: 'string', 
@@ -26,7 +20,7 @@ module.exports = {
       required: true
     },
     
-    dateofBirth : { 
+    dateOfBirth : { 
       type: 'date', 
       required: true
     },
@@ -49,16 +43,49 @@ module.exports = {
     },
     
     title : { type: 'string' },
+    
+    status : {
+      type: 'integer',
+      enum: [1, 0],
+      defaultsTo : 1,
+      required: true
+    },
+    
+    createdBy : {
+      type: 'string',
+      required: true
+    },
+    
+    updatedBy : {
+      type: 'string',
+      required: true
+    },
   },
     // Lifecycle Callbacks
   beforeCreate: function (values, cb) {
+    var date = sails.config.globals.phDate;
     // Encrypt password
     bcrypt.hash(values.password, 10, function(err, hash) {
       if(err) return cb(err);
       values.password = hash;
-      //calling cb() with an argument returns an error. Useful for canceling the entire operation if some criteria fails.
+      values.createdAt = date;
+      values.updatedAt = date;
       cb();
     });
+  },
+
+  beforeUpdate: function (values, cb) {
+    var date = sails.config.globals.phDate;
+    values.updatedAt = date;
+    if (values.password != '')
+    {
+      // Encrypt password
+      bcrypt.hash(values.password, 10, function(err, hash) {
+      if(err) return cb(err);
+      values.password = hash;
+          cb();
+      });
+    } else cb();   
   }
 };
 
