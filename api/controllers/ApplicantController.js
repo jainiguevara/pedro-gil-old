@@ -31,7 +31,9 @@ module.exports = {
     try {
       Applicant.update(req.body.id, 
       { 
-        dateDeployed : req.body.dateDeployed, 
+        dateDeployed : req.body.dateDeployed,
+        employer : req.body.employer,
+        principal : req.body.principal,
         state : 1, 
         updatedBy : req.body.updatedBy
       }).exec(function afterwards(err, updated){
@@ -48,7 +50,11 @@ module.exports = {
       if (req.param('id') !== '') {
         //SEARCH BY ID
         //Object: Applicant 
-        Applicant.findOne({ id: req.param('id'), status : 1 }).exec(function (err, results) {
+        Applicant.findOne({ id: req.param('id'), status : 1 })
+                .populate('expenses', { where: { status: 1 } } )
+                .populate('payments', { where: { status: 1 } })
+                .populate('servicefees', { where: { status: 1 } })
+        .exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             console.log(req.url + " results: " + JSON.stringify(results));
             return res.json(results);

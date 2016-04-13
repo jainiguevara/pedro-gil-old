@@ -69,5 +69,6 @@ function getPHDate()
     var d = new Date();
     var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     var newDateWithOffset = new Date(utc + (3600000 * '+8')); //(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi
+    console.log("PH DATE: " + newDateWithOffset)
     return newDateWithOffset;
 }

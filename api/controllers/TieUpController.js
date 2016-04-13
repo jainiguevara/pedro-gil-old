@@ -25,6 +25,16 @@ module.exports = {
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
-  },		
+  },
+  
+  get: function(req, res) {
+    try {
+      TieUp.find({ status : 1 }).exec(function recordFound(err, result){
+        if (err) { console.log(err); return res.json(err); }
+        console.log('Found tie-up/s: ' + JSON.stringify(result));
+        return res.json(result);
+      });
+    } catch (e) { console.log(e); return res.json(e); }
+  }
 };
 

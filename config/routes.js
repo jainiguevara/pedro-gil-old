@@ -69,9 +69,11 @@ module.exports.routes = {
   //Type
   'post /type/create' : 'TypeController.create',
   'post /type/update' : 'TypeController.update',
+  'get /type/get' : 'TypeController.get',
   //Tie-Up
   'post /tieup/create' : 'TieUpController.create',
   'post /tieup/update' : 'TieUpController.update',
+  'get /tieup/get' : 'TieUpController.get',
   
   /* GET ACTIONS RE-ROUTES */
   //Permission

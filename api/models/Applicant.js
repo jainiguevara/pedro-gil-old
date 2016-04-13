@@ -38,19 +38,16 @@ module.exports = {
     oec : { 
       type: 'string', 
       required: true,
-      //unique: true
     },
     
     cg : { 
       type: 'string', 
       required: true,
-      //unique: true
     },
     
     pdos : { 
       type: 'string', 
       required: true,
-      //unique: true
     },
     
     principal : { //tie-up
@@ -118,7 +115,6 @@ module.exports = {
     values.createdAt = date;
     values.updatedAt = date;
     } catch (e) { console.log(e);}
-
     cb();
   },
   
