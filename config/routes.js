@@ -34,6 +34,7 @@ module.exports.routes = {
       
   'get /': 'PageController.marshallHomepage',
   'get /dashboard' : 'DashboardController.dashboard',
+  'get /adminportal' : 'AdminController.admin',
   'get /login': {
     view: 'login',
     locals: 
@@ -42,16 +43,22 @@ module.exports.routes = {
       title: 'Login'
     }
       },
-    
+  /* REPORTS */
+  'get /report/collection' : 'ReportController.collection',
+  
   /* JSON API */
+  
   //Permission
   'post /command/create' : 'CommandController.create',
   'post /command/update' : 'CommandController.update',
   //User
   'post /login' : 'UserController.login',
+  'get /logout' : 'UserController.logout',
   'post /user/reset' : 'UserController.reset',
+  'post /user/changePassword' : 'UserController.changePassword',
   'post /user/create' : 'UserController.create',
-
+  'post /user/update' : 'UserController.update',
+  'get /user/search' : 'UserController.search',
   //Applicant
   'get /applicant/search' : 'ApplicantController.search',
   'post /applicant/create' : 'ApplicantController.create',
@@ -87,6 +94,8 @@ module.exports.routes = {
   'get /applicant/create' : '/',
   'get /applicant/update' : '/',
   //Payment
+  //'get /payment' : '/',
+  'post /payment/view' : '/',
   'get /payment/create' : '/',
   'get /payment/update' : '/',
   //Expense

@@ -15,7 +15,7 @@ module.exports = {
 		var Passwords = require('machinepack-passwords');
 		json404 = {  message: { status : 404, value : 'Login failed for ' + req.param('username') + '. Incorrect username or password.' } };
 		User.findOne({
-			username: req.param('username')
+			username: req.param('username'), status : 1
 		}).exec(function foundUser(err, user)
 		{
 			json400 = {  message: { status : 400, value : 'Login failed for '+ req.param('username') + '. ' + err } }
@@ -50,6 +50,7 @@ module.exports = {
 				var me = { id : user.id, 
 							username : user.username, 
 							firstName : user.firstName, 
+							role : user.role,
 							message: { status : 200, value : '' } };
 				req.session.me = me;
 				return res.redirect('dashboard');
@@ -57,6 +58,13 @@ module.exports = {
 			});
 		}
 		); 
+	},
+	
+	logout: function (req, res){
+		console.log(req.session.me.username + " logs out.")
+		req.session.me = undefined;
+		console.log("Session value: " + req.session.me)
+		return res.redirect('login');
 	},
 	
 	create: function (req, res) {
@@ -69,7 +77,32 @@ module.exports = {
 	      });
 	    } catch (e) { console.log(e); return res.json(e); }
 	},
+	
+	update: function(req, res) {
+	    try {
+	    	console.log(req.body);
+	      User.update(req.body.id, req.body).exec(function afterwards(err, updated){
+	        if (err) { console.log(err); return res.json(err); }
+	        console.log('User updated: ' + JSON.stringify(updated));
+	        return res.json(updated);
+	      });
+	    } catch (e) { console.log(e); return res.json(e); }
+  	},	
   
+	changePassword: function (req, res) {
+			try {
+			    User.update(req.body.id, { password : req.body.password }).exec(function afterwards(err, updated){
+			        if (err) { console.log(err); return res.json(err); }
+			        console.log('Password reset: ' + JSON.stringify(updated));
+			        return res.json(updated);
+			      });
+		    } catch (err) { 
+		    	var json500 = {  message: { status : 500, value : 'Change password failed for '+ req.param('username') + '. ' + err } }
+		    	console.log(err); 
+		    	return res.json(json500); 
+		    }
+	},
+	
 	reset: function (req, res) {
 		User.findOne({
 			username: req.param('username'),
@@ -97,6 +130,46 @@ module.exports = {
 			      });
 		    } catch (e) { console.log(e); return res.json(e); }
 		});
-	}
+	},
+	
+	search: function(req, res) {
+    try {
+      
+      if (req.param('id') !== '') {
+        //SEARCH BY ID
+        //Object: Applicant 
+        User.findOne({ id: req.param('id'), }).exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+            console.log(req.url + " results: " + JSON.stringify(results));
+            return res.json(results);
+        });
+      } else if (req.param('search') !== '') {
+          //SEARCH BY EITHER OR firstName, lastName, username, email, role
+          //Object: User Array
+          User.find(
+          {
+          or: [
+            { 'firstName': { 'contains': req.param('search') } },
+            { 'lastName': { 'contains': req.param('search') } },
+            { 'username': { 'contains': req.param('search') } },
+            { 'email': { 'contains': req.param('search') } },
+            { 'role': { 'contains': req.param('search') } }
+          ]}
+          ).exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+            console.log(results);
+            return res.json(results);
+          });
+      } else {
+          //ALL
+          //Object: User Array
+          User.find().exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+            console.log(results);
+            return res.json(results);
+          });
+      }
+    } catch (e) { console.log(e); return res.json(e); }
+  }
 };
 

@@ -20,12 +20,12 @@ module.exports = {
   update: function(req, res) {
     console.log(req.url);
     try {
-      Payment.update(req.headers['id'], req.body).exec(function afterwards(err, updated){
+      Payment.update(req.body.id, req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
         console.log('Updated payment: ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
-  }	
+  },
 };
 

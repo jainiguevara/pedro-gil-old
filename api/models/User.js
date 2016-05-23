@@ -10,6 +10,12 @@ module.exports = {
   connection: 'ML_txTracking',
   attributes: {
     
+    username : { 
+      type: 'string',
+      required: true,
+      unique: true
+    },
+    
     firstName : { 
       type: 'string', 
       required: true
@@ -30,7 +36,7 @@ module.exports = {
       unique: true
     },
     
-    username : { 
+    role : { 
       type: 'string',
       required: true
     },
@@ -64,12 +70,15 @@ module.exports = {
     // Lifecycle Callbacks
   beforeCreate: function (values, cb) {
     var date = sails.config.globals.phDate;
+    var defaultPw = values.password + "-P@ssw0rd1234";
+    console.log(defaultPw);
     // Encrypt password
-    bcrypt.hash(values.password, 10, function(err, hash) {
+    bcrypt.hash(defaultPw, 10, function(err, hash) {
       if(err) return cb(err);
       values.password = hash;
       values.createdAt = date;
       values.updatedAt = date;
+      
       cb();
     });
   },
@@ -77,12 +86,15 @@ module.exports = {
   beforeUpdate: function (values, cb) {
     var date = sails.config.globals.phDate;
     values.updatedAt = date;
-    if (values.password != '')
+    console.log(values.password);
+    if (values.password !== undefined & values.password !== '')
     {
       // Encrypt password
       bcrypt.hash(values.password, 10, function(err, hash) {
       if(err) return cb(err);
       values.password = hash;
+      
+      console.log(values.status);
           cb();
       });
     } else cb();   
