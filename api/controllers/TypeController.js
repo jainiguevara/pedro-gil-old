@@ -29,10 +29,10 @@ module.exports = {
   
   get: function(req, res) {
     try {
-      console.log(req.param('module'));
+      //console.log(req.param('module'));
       Type.find({ module : req.param('module'), status : 1 }).exec(function recordFound(err, result){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Found type/s: ' + JSON.stringify(result));
+        //console.log('Found type/s: ' + JSON.stringify(result));
         return res.json(result);
       });
     } catch (e) { console.log(e); return res.json(e); }

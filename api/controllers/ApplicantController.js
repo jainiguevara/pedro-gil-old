@@ -56,7 +56,7 @@ module.exports = {
                 .populate('servicefees', { where: { status: 1 } })
         .exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
-            console.log(req.url + " results: " + JSON.stringify(results));
+            //console.log(req.url + " results: " + JSON.stringify(results));
             return res.json(results);
         });
       } else if (req.param('search') !== '') {
@@ -72,7 +72,7 @@ module.exports = {
           ], status : 1 }
           ).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
-            console.log(results);
+            //console.log(results);
             return res.json(results);
           });
       } else {
@@ -80,7 +80,7 @@ module.exports = {
           //Object: Applicant Array
           Applicant.find({status : 1}).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
-            console.log(results);
+            //console.log(results);
             return res.json(results);
           });
       }

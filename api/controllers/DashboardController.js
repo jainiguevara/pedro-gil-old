@@ -44,7 +44,7 @@ module.exports = {
 		    			};
 					    res.locals.layout = 'layout';
 						res.locals.title = 'Dashboard';
-						console.log(dashboardVals);
+						//console.log(dashboardVals);
 						return res.view('private/applicant', dashboardVals);
 			    	});
 		    	});

@@ -13,6 +13,8 @@ function fillTransactionsTable(res, role) {
                             }
                             value = value + "<th>Transaction</th>" +
                             "<th>Type</th>" +
+                            "<th>Transaction Date</th>" +
+                            "<th>Actual Cost</th>" +
                             "<th>Amount</th>" +
                             "<th>Created By</th>" +
                             "</tr>" +
@@ -22,12 +24,14 @@ function fillTransactionsTable(res, role) {
             value = value + "<tr>";
             if (role == "su" | role == "admin") {
                 value = value +
-                "<td><a name='" + result.id + ":Payment:" + result.type + ":" + result.amount + ":" + result.owner +
+                "<td><a name='" + result.id + ":Payment:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Payment</td>" +
             "<td>" + result.type + "</td>" +
-            "<td>" + result.amount + "</td>" +
+            "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
+            "<td>N/A</td>" +
+            "<td>" + addCommas(result.amount) + "</td>" +
             "<td>" + result.createdBy + "</td>" +
             "</tr>";
             totalPayment = totalPayment + result.amount;
@@ -36,37 +40,41 @@ function fillTransactionsTable(res, role) {
             value = value + "<tr>";
             if (role == "su" | role == "admin") {
                 value = value +
-                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + result.amount + ":" + result.owner +
+                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + result.actualCost + ":" + result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Expense</td>" +
             "<td>" + result.type + "</td>" +
-            "<td>" + result.amount + "</td>" +
+            "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
+            "<td>" + result.actualCost + "</td>" +
+            "<td>" + addCommas(result.amount) + "</td>" +
             "<td>" + result.createdBy + "</td>" +
             "</tr>";
             totalExpense = totalExpense + result.amount;
         });
-        $.each(res.servicefees, function(d, result) {
-            value = value + "<tr>";
-            if (role == "su" | role == "admin") {
-                value = value +
-                "<td><a name='" + result.id + ":Service Fee:" + result.type + ":" + result.amount + ":" + result.owner +
-                "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
-            }
-            value = value + "<td>Service Fee</td>" +
-            "<td>" + result.type + "</td>" +
-            "<td>" + result.amount + "</td>" +
-            "<td>" + result.createdBy + "</td>" +
-            "</tr>";
-            totalServiceFee = totalServiceFee + result.amount;
-        });
+        // $.each(res.servicefees, function(d, result) {
+        //     value = value + "<tr>";
+        //     if (role == "su" | role == "admin") {
+        //         value = value +
+        //         "<td><a name='" + result.id + ":Service Fee:" + result.type + ":" + result.transactionDate + ":" + result.amount + ":" + result.owner +
+        //         "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
+        //     }
+        //     value = value + "<td>Service Fee</td>" +
+        //     "<td>" + result.type + "</td>" +
+        //     "<td>" + result.transactionDate + "</td>" +
+        //     "<td>N/A</td>" +
+        //     "<td>" + result.amount + "</td>" +
+        //     "<td>" + result.createdBy + "</td>" +
+        //     "</tr>";
+        //     totalServiceFee = totalServiceFee + result.amount;
+        // });
         value = value + "</tbody>" +
                             "</table>";
         return value;
     })
-    $("#applicant-transaction-summary p[name='total-payment']").text(totalPayment);
-    $("#applicant-transaction-summary p[name='total-expense']").text(totalExpense);
-    $("#applicant-transaction-summary p[name='total-servicefee']").text(totalServiceFee);
+    $("#applicant-transaction-summary p[name='total-payment']").text(addCommas(totalPayment));
+    $("#applicant-transaction-summary p[name='total-expense']").text(addCommas(totalExpense));
+    //$("#applicant-transaction-summary p[name='total-servicefee']").text(totalServiceFee);
     //IMPLEMENTED INSIDE fillTransactionsTable SO THAT IT CAN BE CALLED
     $('#table-applicant-transactions a').click(function(event){
         event.preventDefault();
@@ -103,10 +111,25 @@ function loadApplicantTransaction(arr) {
                     $("#applicant-transaction-update select[name='type']").append("<option id='" + result.module + "'>" + result.description + "</option>");
                 });
                 $("#applicant-transaction-update input[name='id']").val(arr[0]);
-                $("#applicant-transaction-update select[name='transaction']").val(arr[1]);
+                $("#applicant-transaction-update p[name='label-transaction']").text(arr[1]);
                 $("#applicant-transaction-update select[name='type']").val(arr[2]);
-                $("#applicant-transaction-update input[name='amount']").val(arr[3]);
-                $("#applicant-transaction-update input[name='owner']").val(arr[4]);
+                $("#applicant-transaction-update input[name='transactionDate']").val(arr[3]);
+                $("#applicant-transaction-update input[name='amount']").val(arr[4]);
+                if (arr[1] === 'Expense')
+                {
+                    $('#cont-transaction-update-actualCost').html(
+                        "<label>Actual Cost <i class='fa fa-check'></i></label>" +
+                            "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
+                        );
+                    $("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
+                    $("#applicant-transaction-update input[name='owner']").val(arr[6]);
+                }   
+                else
+                {
+                    $('#cont-transaction-update-actualCost').html('');
+                    $("#applicant-transaction-update input[name='owner']").val(arr[5]);
+                }
+                
             }
         }
     }).done(function() {
@@ -116,6 +139,7 @@ function loadApplicantTransaction(arr) {
         window.setTimeout(waitingDialog.hide(),2000);
     });
 }
+
 function loadApplicantData(arr) {
     try {
         waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
@@ -132,7 +156,7 @@ function loadApplicantData(arr) {
                         $("#applicant-update input[name='referenceNo']").val(res.referenceNo);
                         $("#applicant-update input[name='firstName']").val(res.firstName);
                         $("#applicant-update input[name='lastName']").val(res.lastName);
-                        $("#applicant-update input[name='dateOfBirth']").val(res.dateOfBirth);
+                        $("#applicant-update input[name='dateOfBirth']").val(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-update input[name='passportNo']").val(res.passportNo);
                         $("#applicant-update input[name='oec']").val(res.oec);
                         $("#applicant-update input[name='cg']").val(res.cg);
@@ -151,7 +175,7 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard p[name='referenceNo']").text(res.referenceNo);
                         $("#applicant-indexCard p[name='firstName']").text(res.firstName);
                         $("#applicant-indexCard p[name='lastName']").text(res.lastName);
-                        $("#applicant-indexCard p[name='dateOfBirth']").text(res.dateOfBirth);
+                        $("#applicant-indexCard p[name='dateOfBirth']").text(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-indexCard p[name='passportNo']").text(res.passportNo);
                         $("#applicant-indexCard p[name='oec']").text(res.oec);
                         $("#applicant-indexCard-col2 p[name='cg']").text(res.cg);
@@ -174,14 +198,27 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard-col2 input[name='id']").val(res.id);
                         $("#applicant-transaction-create input[name='owner']").val(res.id);
                         if (res.dateDeployed === undefined) {
-                            $("#cont-deployment").html("<label>Deployment Date <i class=\"fa fa-check\"></i></label><input name=\"dateDeployed\" class=\"form-control\" placeholder=\"Deployment Date\">");
+                            $("#cont-deployment").html(
+                                "<label>Deployment Date <i class=\"fa fa-check\"></i></label>" + 
+                                "<div class='input-group date' id='deploymentDate-applicant-view'>" +
+                                "<input name='dateDeployed' type='text' class='form-control' placeholder='Deployment Date' />" +
+                                "<span class='input-group-addon'>" +
+                                    "<span class='glyphicon glyphicon-calendar'>" +
+                                    "</span>" +
+                                "</span>" +
+                                "</div>"
+                                );
                             $("#indexCard-btn-update").prop('disabled', false);
+                            $('#deploymentDate-applicant-view').datetimepicker({
+                                viewMode: 'months',
+                                format: 'MM/DD/YYYY'
+                            });
                         }
                         else {
-                            $("#cont-deployment").html("<label>Deployment Date <i class=\"fa fa-check\"></i></label><p name=\"dateDeployed\" class=\"form-control-static\">" + res.dateDeployed + "</p>");
+                            $("#cont-deployment").html("<label>Deployment Date <i class=\"fa fa-check\"></i></label><p name=\"dateDeployed\" class=\"form-control-static\">" + setToMMDDYYYY(res.dateDeployed) + "</p>");
                             $("#indexCard-btn-update").prop('disabled', true);
                         }
-                        if (res.principal !== "" | res.principal !== "N/A") {
+                        if (res.principal !== "" & res.principal !== "N/A" & res.principal !== "(Select Principal)") {
                             $("#cont-principal").html(
                                 "<label>Principal (Tie-Up) <i class=\"fa fa-check\"></i></label>" +
                                 "<p class=\"form-control-static\">" + res.principal + "</p>" +
@@ -190,16 +227,8 @@ function loadApplicantData(arr) {
                             $("#ddl-transaction").html(
                                 "<option>(Select Transaction)</option>" +
                                 "<option id=\"1\">Payment</option>" +
-                                "<option id=\"2\">Expense</option>" +
-                                "<option id=\"3\">Service Fee</option>"
+                                "<option id=\"2\">Expense</option>"
                                 );
-                                $("#applicant-transaction-update select[name='transaction']").html(
-                                "<option>(Select Transaction)</option>" +
-                                "<option id=\"1\">Payment</option>" +
-                                "<option id=\"2\">Expense</option>" +
-                                "<option id=\"3\">Service Fee</option>"
-                                );
-                                
                         } else {
                             $.ajax({
                                 url: uri + "tieup/get",
@@ -221,14 +250,8 @@ function loadApplicantData(arr) {
                                     "<option id=\"1\">Payment</option>" +
                                     "<option id=\"2\">Expense</option>"
                                     );
-                                    $("#applicant-transaction-update select[name='transaction']").html(
-                                    "<option>(Select Transaction)</option>" +
-                                    "<option id=\"1\">Payment</option>" +
-                                    "<option id=\"2\">Expense</option>"
-                                    );
                             }});
                         }
-                        
                         /* FILL INDEX CARD VIEW */
                         /* FILL TRANSACTIONS TABLE */
                         fillTransactionsTable(res,arr[2]);
@@ -245,6 +268,8 @@ function loadApplicantData(arr) {
     } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
     
 }
+
+
 $('#table-applicant-results a').on('click', function(event){
     event.preventDefault();
     var arr = null;
@@ -253,6 +278,7 @@ $('#table-applicant-results a').on('click', function(event){
     $("#applicant-transaction-message").html("");
     loadApplicantData(arr);
 });
+
 
 // $('#applicant-search').on("click", 'a', function(event) {
 //   event.preventDefault();
@@ -297,12 +323,13 @@ $('#table-applicant-results a').on('click', function(event){
 //     });
 // });
 
+
 $('#applicant-create').on("submit", function(event) {
   event.preventDefault();
   if ($('#applicant-create-ddl-principal option:selected').val() === '(Select Principal)') {
         getValidationError('#applicant-create-message');
         return;
-   }
+  }
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
    var data = $('#applicant-create').serialize();
     $.ajax({
@@ -340,6 +367,7 @@ $('#applicant-create').on("submit", function(event) {
         window.setTimeout(waitingDialog.hide(),2000);
     });
 });
+
 
 $('#applicant-update').on("submit", function(event) {
   event.preventDefault();
@@ -380,6 +408,7 @@ $('#applicant-update').on("submit", function(event) {
         window.setTimeout(waitingDialog.hide(),2000);
     });;
 });
+
 
 $('#applicant-indexCard-col2').on("submit", function(event) {
   event.preventDefault();
@@ -425,6 +454,7 @@ $('#applicant-indexCard-col2').on("submit", function(event) {
         }
 });
 
+
 $('#ddl-transaction').change(function(event) {
   event.preventDefault();
   var module = $('#ddl-transaction option:selected').attr("id");
@@ -448,6 +478,11 @@ $('#ddl-transaction').change(function(event) {
                 $.each(res, function(d, result){
                     $("#ddl-transaction-type").append("<option id='" + result.module + "'>" + result.description + "</option>");
                 });
+                if (module === "2") {
+                    $('#cont-transaction-actualCost').html("<label>Actual Cost</label><input name='actualCost' class='form-control' placeholder='Actual Cost'>");   
+                } else {
+                    $('#cont-transaction-actualCost').html("");
+                }
             }
         }
     }).done(function() {
@@ -457,6 +492,7 @@ $('#ddl-transaction').change(function(event) {
         window.setTimeout(waitingDialog.hide(),2000);
     });
 });
+
 
 $('#applicant-transaction-create').on("submit", function(event) {
   event.preventDefault();
@@ -486,9 +522,6 @@ $('#applicant-transaction-create').on("submit", function(event) {
                     "<big name=\"result\">" + $('#ddl-transaction').val() + " Transaction created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
                 return message;
                 });
-                $('#applicant-transaction-btn-reset').click(function() {
-                    $('#applicant-transaction-message').html('');
-                });
                 loadApplicantData(["view", $("#applicant-transaction-create input[name='owner']").val(), $("#applicant-transaction-create input[name='role']").val()]);
                 $('#applicant-transaction-btn-reset').click();
             }
@@ -501,20 +534,36 @@ $('#applicant-transaction-create').on("submit", function(event) {
     });
 });
 
+
+$('#applicant-transaction-btn-reset').click(function() {
+    $('#applicant-transaction-message').html('');
+});
+
+
 $('#applicant-transaction-update').on("submit", function(event) {
   event.preventDefault();
   var command = ["payment/update", "expense/update", "servicefee/update"];
-  var module = $("#applicant-transaction-update select[name='transaction'] option:selected").attr("id");
+  var module = 0;//$("#applicant-transaction-update p[name='label-transaction'] option:selected").attr("id");
+  switch ($("#applicant-transaction-update p[name='label-transaction']").text()) {
+      case "Payment": module = 1; break;
+      case "Expense":  module = 2; break;
+      case "ServiceFee":  module = 3; break;
+  };
   var data = $('#applicant-transaction-update').serialize();
-   
-  if ($("#applicant-transaction-update select[name='transaction'] option:selected").val() === '(Select Transaction)' &
-  $("#applicant-transaction-update select[name='type'] option:selected").val() === '(Select Type)') {
+  if ($("#applicant-transaction-update select[name='type'] option:selected").val() === '(Select Type)' & 
+  $("#applicant-transaction-update input[name='amount']").val() === '') {
         getValidationError('#applicant-transaction-update-message');
         return;
   }
+  if (module === "2") {
+      if ($("#applicant-transaction-update input[name='actualCost']").val() === '') {
+        getValidationError('#applicant-transaction-update-message');
+        return;
+      }
+  }
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
     $.ajax({
-        url: uri + command[module - 1],//"payment/create",
+        url: uri + command[module - 1],
         type: "POST",
         data : data,
         success: function (res) {
@@ -525,7 +574,7 @@ $('#applicant-transaction-update').on("submit", function(event) {
             } else {
                 $('#applicant-transaction-update-message').html(function createMessage(){
                 var message = "<div class=\"alert alert-success\">" +
-                    "<big name=\"result\">" + $("#applicant-transaction-update select[name='transaction']").val() + " Transaction updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                    "<big name=\"result\">" + $("#applicant-transaction-update p[name='label-transaction']").text() + " Transaction updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
                 return message;
                 });
                 $("#applicant-transaction-update input[name='close']").click(function() {
@@ -535,12 +584,13 @@ $('#applicant-transaction-update').on("submit", function(event) {
             }
         }
     }).done(function() {
-        window.setTimeout(waitingDialog.hide(),2000);
+        waitingDialog.hide();
     }).error(function(err){
         getInternalError('#applicant-transaction-update-message');
-        window.setTimeout(waitingDialog.hide(),2000);
+        waitingDialog.hide();
     });
 });
+
 
 function getInternalError(object) {
     return $(object).html(function createMessage(){
@@ -552,6 +602,8 @@ function getInternalError(object) {
         return message;
     });
 }
+
+
 function getValidationError(object) {
     return $(object).html(function createMessage(){
         var message = "";
@@ -618,6 +670,8 @@ function loadUserData(arr) {
     } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
     
 }
+
+
 $('#table-user-results a').on('click', function(event){
     event.preventDefault();
     var arr = null;
@@ -764,15 +818,31 @@ $('#user-reset').on("submit", function(event) {
 
 function setToMMDDYYYY(date) 
 {
-    var date = new Date(date),
-        yr = date.getFullYear(),
-        month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
-        day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
-    return month + '-' + day + '-' + yr;
+    if (typeof date === 'undefined')
+    return "";
+    else {
+        var date = new Date(date),
+            yr = date.getFullYear(),
+            month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+            day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
+        return month + '-' + day + '-' + yr;
+    }
 }
 
-function setToHHMMSS(date) 
+function addCommas(nStr)
 {
+	nStr += '';
+	var x = nStr.split('.');
+	var x1 = x[0];
+	var x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+	return x1 + x2;
+}
+
+function setToHHMMSS(date) {
     var date = new Date(date),
         hh = date.getHours(),
         ss = date.getMinutes(),
@@ -780,14 +850,35 @@ function setToHHMMSS(date)
     return hh + ':' + mm + ':' + ss;
 }
 
+$('#dateOfBirth-applicant-create').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
+$('#dateOfBirth-applicant-update').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
+$('#transaction-date-create').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
+$('#transaction-date-update').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
+$('#report-collection-start').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
-
-
-
+$('#report-collection-end').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
 //INITIALIZE DATA TABLE MODULE
 $('#table-applicant-results').DataTable();

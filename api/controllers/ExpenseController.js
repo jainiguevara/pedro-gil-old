@@ -19,7 +19,7 @@ module.exports = {
   
   update: function(req, res) {
     try {
-      Expense.update(req.headers['id'], req.body).exec(function afterwards(err, updated){
+      Expense.update(req.body.id, req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
         console.log('Updated expense: ' + JSON.stringify(updated));
         return res.json(updated);

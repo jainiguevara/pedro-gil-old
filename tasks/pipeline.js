@@ -27,6 +27,8 @@ var cssFilesToInject = [
  'font-awesome/css/font-awesome.min.css',
  //Data Tables
  'styles/datatables.min.css',
+ //Date Time Picker,
+ 'styles/bootstrap-datetimepicker.css'
 ];
 
 
@@ -47,7 +49,9 @@ var jsFilesToInject = [
   //jQuery
   'js/jquery.js',
   //Bootstrap Core JavaScript -->
+  'js/moment.js',
   'js/bootstrap.min.js',
+  'js/bootstrap-datetimepicker.min.js',
   //Morris Charts JavaScript -->
   'js/plugins/morris/raphael.min.js',
   'js/plugins/morris/morris.min.js',

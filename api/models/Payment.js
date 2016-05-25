@@ -15,6 +15,11 @@ module.exports = {
       required: true
     },
     
+    transactionDate : { 
+      type: 'date', 
+      required: true
+    },
+    
     amount : { 
       type: 'float',
       required: true

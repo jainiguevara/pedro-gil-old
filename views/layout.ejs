@@ -15,11 +15,10 @@
     <link rel="stylesheet" href="/styles/sb-admin.css">
     <link rel="stylesheet" href="/styles/plugins/morris.css">
     <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/bootstrap-datetimepicker.css">
     <!--STYLES END-->
   </head>
-
   <body>
-
         <div id="wrapper">
 
         <!-- Navigation -->
@@ -53,10 +52,22 @@
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
                         <a href="/dashboard"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    <% if (session.me.role === 'admin' | session.me.role === 'su') {%>
-                        <a href="/adminportal"><i class="fa fa-fw fa-plug"></i> Admin Portal</a>
-                    <% } %>
+                    
                     </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#report" class="collapsed" aria-expanded="false"><i class="fa fa-fw fa-arrows-v"></i> Reports <i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="report" class="collapse" aria-expanded="false" style="height: 0px;">
+                            <li>
+                                <a href="#" href='#' data-toggle='modal' data-target='#report-collection'>Collections</a>
+                            </li>
+                            <li>
+                                <a href="#">Billing</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <% if (session.me.role === 'admin' | session.me.role === 'su') {%>
+                        <li><a href="/adminportal"><i class="fa fa-fw fa-plug"></i> Admin Portal</a></li>
+                    <% } %>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -75,12 +86,58 @@
         <!-- /#page-wrapper -->
 
     </div>
-    <!-- /#wrapper -->    
+    <!-- /#wrapper -->
+    <div class="modal fade" id="report-collection" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="label-report-collection">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="label-report-collection">Collections Report</h4>
+          </div>
+          <div class="modal-body">
+                <form id="form-report-collection" action="report/collection" target="_blank">
+                    <div class="form-group">
+                        <div id="applicant-transaction-update-message" class="form-group">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <div class='input-group date' id='report-collection-start'>
+                            <input name='start' type='text' class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar">
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <div class='input-group date' id='report-collection-end'>
+                                <input name='end' type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar">
+                                    </span>
+                                </span>
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <button name="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary">Run Report</button>
+                        </div>
+                </form>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/jquery.js"></script>
+    <script src="/js/moment.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/js/plugins/morris/raphael.min.js"></script>
     <script src="/js/plugins/morris/morris.min.js"></script>
     <script src="/js/plugins/morris/morris-data.js"></script>
