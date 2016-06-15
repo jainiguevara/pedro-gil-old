@@ -30,6 +30,7 @@ module.exports = {
 								role : user.role,
 								message: { status : 200, value : '' } };
 				req.session.me = me;
+				sails.log("testing");
 				return res.redirect('dashboard');
 			}
 		);

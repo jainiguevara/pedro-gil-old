@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-    create: function (req, res) {
+  create: function (req, res) {
     try {
       Expense.create(req.body).exec(function expenseMade(err, created)
       {

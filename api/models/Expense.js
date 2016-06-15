@@ -27,7 +27,7 @@ module.exports = {
     
     actualCost : { 
       type: 'float',
-      required: true
+      //required: true
     },
     
     status : {

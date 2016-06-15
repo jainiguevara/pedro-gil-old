@@ -23,7 +23,7 @@ module.exports.log = {
   * You may also set the level to "silent" to suppress all logs.             *
   *                                                                          *
   ***************************************************************************/
-
+  filePath: './logs/application.log'
   // level: 'info'
 
 };

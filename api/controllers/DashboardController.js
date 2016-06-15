@@ -36,16 +36,23 @@ module.exports = {
 			    		var ddlType = results.map(function(a) {
 			    			return { description : a.description, module : a.module };
 			    		});
-			    		var dashboardVals = { 
-			    			me : req.session.me, 
-			    			applicants : applicants,
-			    			ddlTieUp : ddlTieUp, 
-			    			ddlType : ddlType,
-		    			};
-					    res.locals.layout = 'layout';
-						res.locals.title = 'Dashboard';
-						//console.log(dashboardVals);
-						return res.view('private/applicant', dashboardVals);
+			    		
+			    		Country.find({status : 1}).exec(function (err, results) {
+				    		var ddlCountry = results.map(function(a) {
+				    			return { name : a.name };
+				    		});
+				    		var dashboardVals = { 
+				    			me : req.session.me, 
+				    			applicants : applicants,
+				    			ddlTieUp : ddlTieUp, 
+				    			ddlType : ddlType,
+				    			ddlCountry : ddlCountry
+			    			};
+						    res.locals.layout = 'layout';
+							res.locals.title = 'Dashboard';
+							//console.log(dashboardVals);
+							return res.view('private/applicant', dashboardVals);
+			    		});
 			    	});
 		    	});
 			});

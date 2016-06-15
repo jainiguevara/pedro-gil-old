@@ -70,7 +70,7 @@ module.exports = {
     // Lifecycle Callbacks
   beforeCreate: function (values, cb) {
     var date = sails.config.globals.phDate;
-    var defaultPw = values.password + "-P@ssw0rd1234";
+    var defaultPw = values.username + "-P@ssw0rd1234";
     console.log(defaultPw);
     // Encrypt password
     bcrypt.hash(defaultPw, 10, function(err, hash) {

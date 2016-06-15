@@ -26,9 +26,23 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-	ExpenseController: {
-		create: 'isAllowed'
-	}
+	
+	'*' : ['isAuthenticated', 'isAllowed'],
+	UserController: {
+		login : true
+	},
+	
+	DashboardController: {
+		dashboard: true
+	},
+	
+	PageController: {
+		marshallHomepage: true
+	},
+	
+	// CommandController: {
+	// 	'*': true //DISABLE THIS IS PRODUCTION
+	// }
 
   /***************************************************************************
   *                                                                          *

@@ -44,11 +44,14 @@ module.exports.routes = {
     }
       },
   /* REPORTS */
+  'get /report/expense' : 'ReportController.expense',
   'get /report/collection' : 'ReportController.collection',
+  'get /report/deployment' : 'ReportController.deployment',
+  'get /report/ledger' : 'ReportController.ledger',
   
   /* JSON API */
   
-  //Permission
+  //Command
   'post /command/create' : 'CommandController.create',
   'post /command/update' : 'CommandController.update',
   //User
@@ -81,34 +84,47 @@ module.exports.routes = {
   'post /tieup/create' : 'TieUpController.create',
   'post /tieup/update' : 'TieUpController.update',
   'get /tieup/get' : 'TieUpController.get',
-  
+  //Country
+  'post /country/create' : 'CountryController.create',
+  'post /country/update' : 'CountryController.update',
+  'get /country/get' : 'CountryController.get',
   /* GET ACTIONS RE-ROUTES */
-  //Permission
+  //Command
+  'get /command' : '/',
+  'get /permission' : '/',
   'get /permission/create' : 'UserController.create',
   'get /permission/update' : 'UserController.update',
   //User
+  'get /user' : '/',
   'get /user/create' : '/',
   'get /user/reset' : '/',
-  //'get /user' : '/',
   //Applicant
+  'get /applicant' : '/',
   'get /applicant/create' : '/',
   'get /applicant/update' : '/',
   //Payment
-  //'get /payment' : '/',
+  'get /payment' : '/',
   'post /payment/view' : '/',
   'get /payment/create' : '/',
   'get /payment/update' : '/',
   //Expense
+  'get /expense' : '/',
   'get /expense/create' : '/',
   'get /expense/update' : '/',
   //Service Fee
+  'get /servicefee' : '/',
   'get /servicefee/create' : '/',
   'get /servicefee/update' : '/',
   //Type
+  'get /type' : '/',
   'get /type/create' : '/',
   'get /type/update' : '/',
   //Tie-Up
+  'get /tieup' : '/',
   'get /tieup/create' : '/',
-  'get /tieup/update' : '/'
-  
+  'get /tieup/update' : '/',
+  //Country
+  'get /country' : '/',
+  'get /country/create' : '/',
+  'get /country/update' : '/'
 };

@@ -37,17 +37,17 @@ module.exports = {
     
     oec : { 
       type: 'string', 
-      required: true,
+      unique: false
     },
     
     cg : { 
-      type: 'string', 
-      required: true,
+      type: 'string',
+      unique: false
     },
     
     pdos : { 
       type: 'string', 
-      required: true,
+      unique: false
     },
     
     principal : { //tie-up

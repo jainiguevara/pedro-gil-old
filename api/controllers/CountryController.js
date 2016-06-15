@@ -1,17 +1,17 @@
 /**
- * TieUpController
+ * CountryController
  *
- * @description :: Server-side logic for managing tieups
+ * @description :: Server-side logic for managing Countries
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 module.exports = {
   create: function (req, res) {
     try {
-      TieUp.create(req.body).exec(function tieupCreated(err, created)
+      Country.create(req.body).exec(function applicantSaved(err, created)
       {
         if (err) { console.log(err); return res.json(err); }
-        console.log('Tie-up created: ' + JSON.stringify(created));
+        console.log('Created country: ' + JSON.stringify(created));
         return res.json(created);
       });
     } catch (e) { console.log(e); return res.json(e); }
@@ -19,9 +19,9 @@ module.exports = {
   
   update: function(req, res) {
     try {
-      TieUp.update(req.headers['id'], req.body).exec(function afterwards(err, updated){
+      Country.update(req.headers['id'], req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Updated tie-up: ' + JSON.stringify(updated));
+        console.log('Updated country: ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
@@ -29,12 +29,11 @@ module.exports = {
   
   get: function(req, res) {
     try {
-      TieUp.find({ status : 1 }).exec(function recordFound(err, result){
+      Country.find({ module : req.param('module'), status : 1 }).exec(function recordFound(err, result){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Found tie-up/s: ' + JSON.stringify(result));
-        return res.jsonp(result);
+        return res.json(result);
       });
-    } catch (e) { console.log(e); return res.jsonp(e); }
+    } catch (e) { console.log(e); return res.json(e); }
   }
 };
 

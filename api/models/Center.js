@@ -1,5 +1,5 @@
 /**
- * Type.js
+ * Center.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -8,16 +8,18 @@
 module.exports = {
 
   attributes: {
-    description : {
+    name : {
       type: 'string',
+      //enum: [0, 1],
+      //defaultsTo : 0,
       required: true
     },
     
-    module : { 
-      type: 'integer',
-      enum: [1, 2, 3], // 1 = Payment, 2 = Expense, 3 = Service Fee
-      required: true
-    },
+    // type : {
+    //   type: 'integer',
+    //   enum: [1, 2],
+    //   required: true
+    // },
     
     status : {
       type: 'integer',
@@ -36,7 +38,7 @@ module.exports = {
       required: true
     }
   },
-    
+  
   beforeCreate: function (values, cb) {
     var date = sails.config.globals.phDate;
     values.createdAt = date;
@@ -49,5 +51,6 @@ module.exports = {
     values.updatedAt = date;
     cb();
   }
+  
 };
 

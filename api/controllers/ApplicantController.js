@@ -32,6 +32,9 @@ module.exports = {
       Applicant.update(req.body.id, 
       { 
         dateDeployed : req.body.dateDeployed,
+        oec : req.body.oec,
+        pdos : req.body.pdos,
+        cg : req.body.pdos,
         employer : req.body.employer,
         principal : req.body.principal,
         state : 1, 
@@ -57,7 +60,7 @@ module.exports = {
         .exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             //console.log(req.url + " results: " + JSON.stringify(results));
-            return res.json(results);
+            return res.jsonp(results);
         });
       } else if (req.param('search') !== '') {
           //SEARCH BY EITHER OR firstName, lastName, referenceNo, passportNo
@@ -73,7 +76,7 @@ module.exports = {
           ).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             //console.log(results);
-            return res.json(results);
+            return res.jsonp(results);
           });
       } else {
           //ALL
@@ -81,10 +84,10 @@ module.exports = {
           Applicant.find({status : 1}).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             //console.log(results);
-            return res.json(results);
+            return res.jsonp(results);
           });
       }
-    } catch (e) { console.log(e); return res.json(e); }
+    } catch (e) { console.log(e); return res.jsonp(e); }
   }
 };
 

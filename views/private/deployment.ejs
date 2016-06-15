@@ -1,0 +1,91 @@
+<div id="export-report-deployment" class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Deployment Report</h1>
+        <ol class="breadcrumb">
+            <li class="active">
+                Period from <%=headers.start%> to <%=headers.end%>
+            </li>
+        </ol>
+    </div>
+    <div class='col-lg-12'>
+        <div class="table-responsive">
+            <table style="font-size: 80%;" id="table-report-deployment" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>    
+                        <th>Deployment Date</th>
+                        <th>Reference No.</th>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Passport No.</th>
+                        <th>OEC</th>
+                        <th>CG</th>
+                        <th>PDOS</th>
+                        <th>Principal</th>
+                        <th>Employer</th>
+                        <th>Country</th>
+                        <th>Payments</th>
+                        <th>Expenses</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof report !== 'undefined') {
+                        for (var i=0; i < report.length; i++) { 
+                        if (typeof report[i].referenceNo !== 'undefined') {
+                            var payments = 0, expenses = 0; 
+                            for (var p in report[i].payments) {
+                                if (typeof report[i].payments[p].amount !== 'undefined') {
+                                    payments += report[i].payments[p].amount;
+                                }
+                            } 
+                            for (var e in report[i].expenses) { 
+                                if (typeof report[i].expenses[e].amount !== 'undefined') {
+                                  expenses += report[i].expenses[e].amount;
+                                }
+                            } %>
+                            <tr>
+                              <td><%= report[i].date %></td>
+                              <td><%= report[i].referenceNo %></td>
+                              <td><%= report[i].name %></td>
+                              <td><%= report[i].dateOfBirth %></td>
+                              <td><%= report[i].passportNo %></td>
+                              <td><%= report[i].oec %></td>
+                              <td><%= report[i].cg %></td>
+                              <td><%= report[i].pdos %></td>
+                              <td><%= report[i].principal %></td>
+                              <td><%= report[i].employer %></td>
+                              <td><%= report[i].country %></td>
+                              <td><%= addCommas(payments) %></td>
+                              <td><%= addCommas(expenses) %></td>
+                              <td><%= addCommas(payments - expenses) %></td>
+                              <% payments = 0; expenses = 0; %>
+                            </tr>
+                        <% }
+                        }
+                    }%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <button id="button-export-deployment" class="btn btn-success">Download</button>
+        <button onClick="window.print()" class="btn btn-info">Print</button>
+    </div>    
+</div>
+
+<%
+function addCommas(nStr)
+{
+	nStr += '';
+	var x = nStr.split('.');
+	var x1 = x[0];
+	var x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+	return x1 + x2;
+}
+%>

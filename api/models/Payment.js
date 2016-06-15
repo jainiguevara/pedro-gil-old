@@ -15,6 +15,13 @@ module.exports = {
       required: true
     },
     
+    center : {
+      type: 'string',
+      //enum: [0, 1],
+      //defaultsTo : 0,
+      //required: true
+    },
+    
     transactionDate : { 
       type: 'date', 
       required: true

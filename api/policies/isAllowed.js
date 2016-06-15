@@ -1,22 +1,39 @@
 module.exports = function isAllowed(req, res, next) {
-    console.log(req.param('createdBy') + ' ' + req.url);
+    var url = req.url.split('?')[0];
+    var log = { 'policy' : 'isAllowed', 'url' : url, 'username' : req.session.me.username, 'role' : req.session.me.role, 'status' : 'OK' };
     try {
        User.findOne({
-			username: req.param('createdBy')
-		}).exec(function foundUser(err, user)
-		{
-		    if (user.role !== "su")
-		    {
-    		    Command.findOne({
+    		username: req.session.me.username
+    	}).exec(function foundUser(err, user)
+    	{
+    	    if (user. role === "su") {
+    	        console.log(log);
+    	        return next();
+    	    }
+    		Command.findOne({
     		        role : user.role,
-    		        route : req.url
+    		        route : url
     		    }).exec(function foundCommand(err, cmd)
     		    {
-    		        if (err) console.log(err); next(err);
-            		if (!cmd) console.log(user.username + ' not allowed to execute this command ' + req.url);
+    		        if (err) {
+    		            log.status = err;
+    		            console.log(log);
+    		            return next(log);
+    		        }
+            		if (!cmd) {
+            		    log.status = 'NOT-ALLOWED';
+    		            console.log(log);
+            		    return next(url + ' : ' + log.status);
+            		} else {
+            		    console.log(log);
+    	                return next();
+            		};
     		    });
-            }
-            next();
-		});
-    } catch (e) {console.log(e);}
+            
+    	});
+    } catch (e) {
+        log.status = e;
+    	console.log(log);
+    	return next(log);
+    }
 };

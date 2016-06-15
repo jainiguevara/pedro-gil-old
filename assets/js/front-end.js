@@ -2,19 +2,20 @@ var uri = 'https://pedro-gil-niguevara.c9users.io/';
 function fillTransactionsTable(res, role) {
     var totalPayment = 0,
      totalExpense = 0,
-     totalServiceFee = 0;
+     totalServiceFee = 0,
+     totalDiff = 0;
     $("#cont-applicant-transactions").html(function() {
         var value = 
         "<table id=\"table-applicant-transactions\" class=\"table table-bordered table-hover table-striped\" cellspacing=\"0\" width=\"100%\">" +
                             "<thead>" +
                             "<tr>";
                             if (role == "su" | role == "admin") {
-                                value = value + "<th></th>"; //Action
+                                value = value + "<th>Edit</th>"; //Action
                             }
                             value = value + "<th>Transaction</th>" +
                             "<th>Type</th>" +
                             "<th>Transaction Date</th>" +
-                            "<th>Actual Cost</th>" +
+                            // "<th>Actual Cost</th>" +
                             "<th>Amount</th>" +
                             "<th>Created By</th>" +
                             "</tr>" +
@@ -27,10 +28,13 @@ function fillTransactionsTable(res, role) {
                 "<td><a name='" + result.id + ":Payment:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
-            value = value + "<td>Payment</td>" +
-            "<td>" + result.type + "</td>" +
-            "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
-            "<td>N/A</td>" +
+            value = value + "<td>Payment</td>";
+            if (result.type !== 'Rebate')
+                value = value + "<td>" + result.type + "</td>";
+            else 
+                value = value + "<td>" + result.type + " (" + result.center +  ")</td>";
+            value = value + "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
+            // "<td>N/A</td>" +
             "<td>" + addCommas(result.amount) + "</td>" +
             "<td>" + result.createdBy + "</td>" +
             "</tr>";
@@ -40,13 +44,15 @@ function fillTransactionsTable(res, role) {
             value = value + "<tr>";
             if (role == "su" | role == "admin") {
                 value = value +
-                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + result.actualCost + ":" + result.owner +
+                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + 
+                //result.actualCost + ":" + 
+                result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Expense</td>" +
             "<td>" + result.type + "</td>" +
             "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
-            "<td>" + result.actualCost + "</td>" +
+            //"<td>" + result.actualCost + "</td>" +
             "<td>" + addCommas(result.amount) + "</td>" +
             "<td>" + result.createdBy + "</td>" +
             "</tr>";
@@ -62,7 +68,7 @@ function fillTransactionsTable(res, role) {
         //     value = value + "<td>Service Fee</td>" +
         //     "<td>" + result.type + "</td>" +
         //     "<td>" + result.transactionDate + "</td>" +
-        //     "<td>N/A</td>" +
+        //     // "<td>N/A</td>" +
         //     "<td>" + result.amount + "</td>" +
         //     "<td>" + result.createdBy + "</td>" +
         //     "</tr>";
@@ -74,6 +80,7 @@ function fillTransactionsTable(res, role) {
     })
     $("#applicant-transaction-summary p[name='total-payment']").text(addCommas(totalPayment));
     $("#applicant-transaction-summary p[name='total-expense']").text(addCommas(totalExpense));
+    $("#applicant-transaction-summary p[name='total-difference']").text(addCommas(totalPayment - totalExpense));
     //$("#applicant-transaction-summary p[name='total-servicefee']").text(totalServiceFee);
     //IMPLEMENTED INSIDE fillTransactionsTable SO THAT IT CAN BE CALLED
     $('#table-applicant-transactions a').click(function(event){
@@ -94,7 +101,7 @@ function loadApplicantTransaction(arr) {
     $.ajax({
         url: uri + "type/get?module=" + module,
         type: "GET",
-        //data: type,
+        dataType: "jsonp",
         success: function (res) {
             if (res.error)
             { 
@@ -117,16 +124,16 @@ function loadApplicantTransaction(arr) {
                 $("#applicant-transaction-update input[name='amount']").val(arr[4]);
                 if (arr[1] === 'Expense')
                 {
-                    $('#cont-transaction-update-actualCost').html(
-                        "<label>Actual Cost <i class='fa fa-check'></i></label>" +
-                            "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
-                        );
-                    $("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
+                    // $('#cont-transaction-update-actualCost').html(
+                    //     "<label>Actual Cost <i class='fa fa-check'></i></label>" +
+                    //         "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
+                    //     );
+                    //$("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
                     $("#applicant-transaction-update input[name='owner']").val(arr[6]);
                 }   
                 else
                 {
-                    $('#cont-transaction-update-actualCost').html('');
+                    //$('#cont-transaction-update-actualCost').html('');
                     $("#applicant-transaction-update input[name='owner']").val(arr[5]);
                 }
                 
@@ -146,6 +153,7 @@ function loadApplicantData(arr) {
             $.ajax({
                 url: uri + "applicant/search?id=" + arr[1],
                 type: "GET",
+                dataType: "jsonp",
                 success: function applicantSearched(res) {
                     if (arr[0] === 'update') {
                         if (res.error) { 
@@ -172,14 +180,53 @@ function loadApplicantData(arr) {
                             return; 
                         }
                         /* FILL INDEX CARD VIEW */
+                        $('#tab-applicant-indexCard-txListing').html(
+                            "<h2>Transaction Listing</h2><a href='report/ledger?id=" + res.id + "' target='_blank'>Detailed View</a><br/><br/>");
                         $("#applicant-indexCard p[name='referenceNo']").text(res.referenceNo);
                         $("#applicant-indexCard p[name='firstName']").text(res.firstName);
                         $("#applicant-indexCard p[name='lastName']").text(res.lastName);
                         $("#applicant-indexCard p[name='dateOfBirth']").text(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-indexCard p[name='passportNo']").text(res.passportNo);
-                        $("#applicant-indexCard p[name='oec']").text(res.oec);
-                        $("#applicant-indexCard-col2 p[name='cg']").text(res.cg);
-                        $("#applicant-indexCard-col2 p[name='pdos']").text(res.pdos);
+                        //OEC
+                        if (res.oec === "") {
+                            $('#cont-oec').html(
+                                "<label>OEC <i class=\"fa fa-check\"></i></label>" +
+                                    "<input name=\"oec\" class=\"form-control\" placeholder=\"OEC\">"
+                                );
+                        } else {
+                            $('#cont-oec').html(
+                                "<label>OEC <i class=\"fa fa-check\"></i></label>" +
+                                    "<p class=\"form-control-static\">" + res.oec + "</p>" +
+                                    "<input name=\"oec\" type=\"hidden\" value=\"" + res.oec + "\">"
+                                );
+                        }
+                        //CG
+                        if (res.cg === "") {
+                            $('#cont-cg').html(
+                                "<label>CG <i class=\"fa fa-check\"></i></label>" +
+                                    "<input name=\"cg\" class=\"form-control\" placeholder=\"CG\">"
+                                );
+                        } else {
+                            $('#cont-cg').html(
+                                "<label>CG <i class=\"fa fa-check\"></i></label>" +
+                                    "<p class=\"form-control-static\">" + res.cg + "</p>" +
+                                    "<input name=\"cg\" type=\"hidden\" value=\"" + res.cg + "\">"
+                                );
+                        }
+                        //PDOS
+                        if (res.pdos === "") {
+                            $('#cont-pdos').html(
+                                "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
+                                    "<input name=\"pdos\" class=\"form-control\" placeholder=\"PDOS\">"
+                                );
+                        } else {
+                            $('#cont-pdos').html(
+                                "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
+                                    "<p class=\"form-control-static\">" + res.pdos + "</p>" +
+                                    "<input name=\"pdos\" type=\"hidden\" value=\"" + res.pdos + "\">"
+                                );
+                        }
+                        //Eployer
                         if (res.employer === "") {
                             $('#cont-employer').html(
                                 "<label>Employer <i class=\"fa fa-check\"></i></label>" +
@@ -193,7 +240,6 @@ function loadApplicantData(arr) {
                                     "<input name=\"employer\" type=\"hidden\" value=\"" + res.employer + "\">"
                                 );
                         }
-                        $("#applicant-indexCard-col2 p[name='employer']").text(res.employer);
                         $("#applicant-indexCard-col2 p[name='country']").text(res.country);
                         $("#applicant-indexCard-col2 input[name='id']").val(res.id);
                         $("#applicant-transaction-create input[name='owner']").val(res.id);
@@ -233,6 +279,7 @@ function loadApplicantData(arr) {
                             $.ajax({
                                 url: uri + "tieup/get",
                                 type: "GET",
+                                dataType: "jsonp",
                                 //data: data,
                                 success: function (res) {
                                     if (res.error) { alert (JSON.stringify(res)); }
@@ -334,9 +381,6 @@ $('#applicant-create').on("submit", function(event) {
    var data = $('#applicant-create').serialize();
     $.ajax({
         url: uri + "applicant/create",
-        // headers: {
-        //     "Authorization": id + ":" + key
-        // },
         type: "POST",
         data: data,
         success: function (res) {
@@ -416,6 +460,9 @@ $('#applicant-indexCard-col2').on("submit", function(event) {
    var data = $('#applicant-indexCard-col2').serialize();
    if ($("#applicant-indexCard-col2 input[name='employer']").val() === "" | 
    $("#applicant-indexCard-col2 input[name='dateDeployed']").val() === "" | 
+   $("#applicant-indexCard-col2 input[name='oec']").val() === "" |
+   $("#applicant-indexCard-col2 input[name='pdos']").val() === "" |
+   $("#applicant-indexCard-col2 input[name='cg']").val() === "" |
    $("#applicant-indexCard-col2 select[name='principal']").val() === "(Select Principal)") {
        getValidationError('#applicant-indexCard-message');
        window.setTimeout(waitingDialog.hide(),2000);
@@ -450,7 +497,7 @@ $('#applicant-indexCard-col2').on("submit", function(event) {
         }).error(function(err){
             getInternalError('#applicant-indexCard-message');
             window.setTimeout(waitingDialog.hide(),2000);
-        });;
+        });
         }
 });
 
@@ -462,6 +509,7 @@ $('#ddl-transaction').change(function(event) {
     $.ajax({
         url: uri + "type/get?module=" + module,
         type: "GET",
+        dataType: "jsonp",
         //data: type,
         success: function (res) {
             if (res.error)
@@ -478,11 +526,11 @@ $('#ddl-transaction').change(function(event) {
                 $.each(res, function(d, result){
                     $("#ddl-transaction-type").append("<option id='" + result.module + "'>" + result.description + "</option>");
                 });
-                if (module === "2") {
-                    $('#cont-transaction-actualCost').html("<label>Actual Cost</label><input name='actualCost' class='form-control' placeholder='Actual Cost'>");   
-                } else {
-                    $('#cont-transaction-actualCost').html("");
-                }
+                // if (module === "2") {
+                //     $('#cont-transaction-actualCost').html("<label>Actual Cost</label><input name='actualCost' class='form-control' placeholder='Actual Cost'>");   
+                // } else {
+                //     $('#cont-transaction-actualCost').html("");
+                // }
             }
         }
     }).done(function() {
@@ -494,6 +542,50 @@ $('#ddl-transaction').change(function(event) {
 });
 
 
+$('#ddl-transaction-type').change(function(event) {
+  event.preventDefault();
+  var type = $('#ddl-transaction-type option:selected').val();
+  if (type === "Rebate")
+  {
+         waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+        $.ajax({
+            url: uri + "center/get",
+            type: "GET",
+            dataType: "jsonp",
+            //data: type,
+            success: function (res) {
+                if (res.error)
+                { 
+                    $('#applicant-transaction-message').html(function createPayment(){
+                        var message = "";
+                        message = "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                        return message;
+                    });
+                    return;
+                } else {
+                    //POPULATE CENTER
+                    $('#cont-transaction-center').html(
+                      "<label>Medical/Training Center</i></label>" +
+                                        "<select id='ddl-center' name='center' class='form-control'>" +
+                                            "<option>(Select Center)</option>"
+                    );
+                    $.each(res, function(d, result){
+                        $("#ddl-center").append("<option>" + result.name + "</option>");
+                    });
+                    $('#cont-transaction-center').append("</select>");
+                }
+            }
+        }).done(function() {
+            window.setTimeout(waitingDialog.hide(),2000);
+        }).error(function(err){
+            getInternalError('#applicant-payment-message');
+            window.setTimeout(waitingDialog.hide(),2000);
+        });
+  } else {
+      $('#cont-transaction-center').html('');
+  }
+});
+
 $('#applicant-transaction-create').on("submit", function(event) {
   event.preventDefault();
   
@@ -501,7 +593,7 @@ $('#applicant-transaction-create').on("submit", function(event) {
    var module = $('#ddl-transaction option:selected').attr("id");
    var data = $('#applicant-transaction-create').serialize();
    
-   if ($('#ddl-transaction option:selected').val() === '(Select Transaction)' &
+   if ($('#ddl-transaction option:selected').val() === '(Select Transaction)' |
    $('#ddl-transaction-type option:selected').val() === '(Select Type)') {
         getValidationError('#applicant-transaction-message');
         return;
@@ -511,7 +603,7 @@ $('#applicant-transaction-create').on("submit", function(event) {
         url: uri + command[module - 1],//"payment/create",
         type: "POST",
         data : data,
-        success: function (res) {
+        success: function (res, error) {
             if (res.error)
             { 
                 getValidationError('#applicant-transaction-message');
@@ -525,6 +617,10 @@ $('#applicant-transaction-create').on("submit", function(event) {
                 loadApplicantData(["view", $("#applicant-transaction-create input[name='owner']").val(), $("#applicant-transaction-create input[name='role']").val()]);
                 $('#applicant-transaction-btn-reset').click();
             }
+        },
+        error: function getError(res) {
+            getInternalError('#applicant-transaction-message');
+            return;
         }
     }).done(function() {
         window.setTimeout(waitingDialog.hide(),2000);
@@ -555,12 +651,12 @@ $('#applicant-transaction-update').on("submit", function(event) {
         getValidationError('#applicant-transaction-update-message');
         return;
   }
-  if (module === "2") {
-      if ($("#applicant-transaction-update input[name='actualCost']").val() === '') {
-        getValidationError('#applicant-transaction-update-message');
-        return;
-      }
-  }
+//   if (module === "2") {
+//       if ($("#applicant-transaction-update input[name='actualCost']").val() === '') {
+//         getValidationError('#applicant-transaction-update-message');
+//         return;
+//       }
+//   }
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
     $.ajax({
         url: uri + command[module - 1],
@@ -619,6 +715,7 @@ function loadUserData(arr) {
             $.ajax({
                 url: uri + "user/search?id=" + arr[1],
                 type: "GET",
+                dataType: "jsonp",
                 success: function userSearched(res) {
                     if (arr[0] === 'update') {
                         if (res.error) { 
@@ -870,6 +967,16 @@ $('#transaction-date-update').datetimepicker({
     format: 'MM/DD/YYYY'
 });
 
+$('#report-expense-start').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
+$('#report-expense-end').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
 $('#report-collection-start').datetimepicker({
     viewMode: 'months',
     format: 'MM/DD/YYYY'
@@ -878,6 +985,31 @@ $('#report-collection-start').datetimepicker({
 $('#report-collection-end').datetimepicker({
     viewMode: 'months',
     format: 'MM/DD/YYYY'
+});
+
+$('#report-deployment-start').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
+$('#report-deployment-end').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
+$("#button-export-collection").click(function (e) {
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-collection').html()));
+    e.preventDefault();
+});
+
+$("#button-export-payment").click(function (e) {
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-payment').html()));
+    e.preventDefault();
+});
+
+$("#button-export-deployment").click(function (e) {
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-deployment').html()));
+    e.preventDefault();
 });
 
 //INITIALIZE DATA TABLE MODULE

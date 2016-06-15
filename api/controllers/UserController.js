@@ -141,7 +141,7 @@ module.exports = {
         User.findOne({ id: req.param('id'), }).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             console.log(req.url + " results: " + JSON.stringify(results));
-            return res.json(results);
+            return res.jsonp(results);
         });
       } else if (req.param('search') !== '') {
           //SEARCH BY EITHER OR firstName, lastName, username, email, role
@@ -158,18 +158,18 @@ module.exports = {
           ).exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             console.log(results);
-            return res.json(results);
+            return res.jsonp(results);
           });
       } else {
           //ALL
           //Object: User Array
           User.find().exec(function (err, results) {
-            if (err) { console.log(err); return res.json(err); }
+            if (err) { console.log(err); return res.jsonp(err); }
             console.log(results);
-            return res.json(results);
+            return res.jsonp(results);
           });
       }
-    } catch (e) { console.log(e); return res.json(e); }
+    } catch (e) { console.log(e); return res.jsonp(e); }
   }
 };
 
