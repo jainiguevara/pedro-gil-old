@@ -2,7 +2,6 @@
 <div class="row">
     <div class="col-lg-12">
         <button id="button-export-deployment" class="btn btn-success">Download</button>
-        <button onClick="window.print()" class="btn btn-info">Print</button>
     </div>    
 </div>
 <br/>
@@ -11,7 +10,9 @@
         <div class="table-responsive">
             <table style="font-size: 80%;" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
                 <tbody>
-                    <% if (typeof report !== 'undefined') { %>
+                    <%
+                    var payments = 0, expenses = 0;
+                    if (typeof report !== 'undefined') { %>
                         <tr><td>Deployment Date</td><td><%= setToMMDDYYYY(report.dateDeployed) %></td></tr>
                         <tr><td>Reference No.</td><td><%= report.referenceNo %></td></tr>
                         <tr><td>Name</td><td><%= report.firstName %> <%= report.lastName %></td></tr>
@@ -26,6 +27,7 @@
                     <% } %>
                 </tbody>
             </table>
+            <br /><br/> 
         </div>
     </div>
     <div class='col-lg-6'>
@@ -41,7 +43,8 @@
                 </thead>
                 <tbody>
                     <% if (typeof report !== 'undefined') {
-                        for (var i=0; i < report.payments.length; i++) { %>
+                        for (var i=0; i < report.payments.length; i++) { 
+                            payments += report.payments[i].amount;%>
                             <tr>
                               <td><%= setToMMDDYYYY(report.payments[i].transactionDate) %></td>
                               <td>Payment</td>
@@ -50,22 +53,34 @@
                               <% } else { %>
                               <td><%= report.payments[i].type %></td>
                               <% } %>
-                              <td><%= addCommas(report.payments[i].amount) %></td>
+                              <td><%= addCommas(parseFloat(Math.round(report.payments[i].amount * 100) / 100).toFixed(2)) %></td>
                             </tr>
                         <% } 
                     } if (typeof report !== 'undefined') {
-                        for (var i=0; i < report.expenses.length; i++) { %>
+                        for (var i=0; i < report.expenses.length; i++) { 
+                            expenses += report.expenses[i].amount;%>
                             <tr>
                               <td><%= setToMMDDYYYY(report.expenses[i].transactionDate) %></td>
                               <td>Expense</td>
                               <td><%= report.expenses[i].type %></td>
-                              <td><%= addCommas(report.expenses[i].amount) %></td>
+                              <td><%= addCommas(parseFloat(Math.round(report.expenses[i].amount * 100) / 100).toFixed(2)) %></td>
                             </tr>
                         <% }
                     } %>
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class='col-lg-2'>
+        <table style="font-size: 80%;" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <tbody>
+                    <% if (typeof report !== 'undefined') { %>
+                        <tr><td>Total Payments</td><td><%= addCommas(parseFloat(Math.round(payments * 100) / 100).toFixed(2)) %></td></tr>
+                        <tr><td>Total Expenses</td><td><%= addCommas(parseFloat(Math.round(expenses * 100) / 100).toFixed(2)) %></td></tr>
+                        <tr><td>Total Difference</td><td><%= addCommas(parseFloat(Math.round((payments - expenses) * 100) / 100).toFixed(2)) %></td></tr>
+                    <% } %>
+                </tbody>
+            </table>
     </div>
 </div>
 <%

@@ -80,14 +80,22 @@ module.exports.routes = {
   'post /type/create' : 'TypeController.create',
   'post /type/update' : 'TypeController.update',
   'get /type/get' : 'TypeController.get',
+  'get /type/search' : 'TypeController.search',
   //Tie-Up
   'post /tieup/create' : 'TieUpController.create',
   'post /tieup/update' : 'TieUpController.update',
   'get /tieup/get' : 'TieUpController.get',
+  'get /tieup/search' : 'TieUpController.search',
   //Country
   'post /country/create' : 'CountryController.create',
   'post /country/update' : 'CountryController.update',
   'get /country/get' : 'CountryController.get',
+  'get /center/search' : 'CountryController.search',
+  //Center
+  'post /center/create' : 'CenterController.create',
+  'post /center/update' : 'CenterController.update',
+  'get /center/get' : 'CenterController.get',
+  'get /center/search' : 'CenterController.search',
   /* GET ACTIONS RE-ROUTES */
   //Command
   'get /command' : '/',
@@ -119,6 +127,7 @@ module.exports.routes = {
   'get /type' : '/',
   'get /type/create' : '/',
   'get /type/update' : '/',
+
   //Tie-Up
   'get /tieup' : '/',
   'get /tieup/create' : '/',
@@ -126,5 +135,9 @@ module.exports.routes = {
   //Country
   'get /country' : '/',
   'get /country/create' : '/',
-  'get /country/update' : '/'
+  'get /country/update' : '/',
+  //Center
+  'get /center' : '/',
+  'get /center/create' : '/',
+  'get /center/update' : '/'
 };

@@ -27,12 +27,48 @@ module.exports = {
 		    	//ADD DROP DOWN LIST FOR USER ROLES
 		    	
 		    	//ADD DROP DOWN LIST FOR USER ROLES
-			    var dashboardVals = { 
-			    		me : req.session.me, 
-			    		users : users
-		    	};
-				//console.log(dashboardVals);
-				return res.view('private/admin', dashboardVals);
+		    	Center.find().exec(function (err, results) {
+			    	var centers = results.map(function(a) {
+			    	return { 
+			    		id : a.id, 
+			    		name : a.name,
+			    		status : a.status === 1 ? 'Active' : 'Deactivated'}
+			    	});
+			    	Country.find().exec(function (err, results) {
+				    	var countries = results.map(function(a) {
+				    	return { 
+				    		id : a.id, 
+				    		name : a.name,
+				    		status : a.status === 1 ? 'Active' : 'Deactivated'}
+				    	});
+				    	TieUp.find().exec(function (err, results) {
+					    	var tieups = results.map(function(a) {
+					    	return { 
+					    		id : a.id, 
+					    		name : a.name,
+					    		status : a.status === 1 ? 'Active' : 'Deactivated'}
+					    	});
+					    	Type.find().exec(function (err, results) {
+						    	var types = results.map(function(a) {
+						    	return { 
+						    		id : a.id, 
+						    		description : a.description,
+						    		module : a.module,
+						    		status : a.status === 1 ? 'Active' : 'Deactivated'}
+						    	});
+							    var dashboardVals = { 
+							    		me : req.session.me, 
+							    		users : users,
+							    		centers : centers,
+							    		countries : countries,
+							    		tieups : tieups,
+							    		types : types
+						    	};
+								return res.view('private/admin', dashboardVals);
+					    	});
+			    		});
+			    	});
+				});
 			});	
 		} catch (e) { console.log(e); return; }
 	}

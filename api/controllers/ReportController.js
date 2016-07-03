@@ -44,8 +44,8 @@ module.exports = {
       		    			    referenceNo : a.owner.referenceNo,
       		    			    name : a.owner.firstName + ' ' + a.owner.lastName, 
       		    			    type : a.type, 
-      		    			    actualCost : addCommas(a.actualCost),
-      		    			    amount : addCommas(a.amount),
+      		    			    actualCost : a.actualCost,
+      		    			    amount : a.amount,
       		    			    principal : a.owner.principal,
       		    			    employer : a.owner.employer
       		    			};
@@ -113,7 +113,7 @@ module.exports = {
       	    		    referenceNo : a.owner.referenceNo,
       	    		    name : a.owner.firstName + ' ' + a.owner.lastName, 
       	    		    type : a.type, 
-      	    		    amount : addCommas(a.amount)
+      	    		    amount : a.amount
       	    		};
     	    });
     	    //console.log('Payment/s found: ' + JSON.stringify(report));

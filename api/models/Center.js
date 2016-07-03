@@ -10,9 +10,8 @@ module.exports = {
   attributes: {
     name : {
       type: 'string',
-      //enum: [0, 1],
-      //defaultsTo : 0,
-      required: true
+      required: true,
+      unique: true
     },
     
     // type : {

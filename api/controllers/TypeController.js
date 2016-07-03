@@ -19,7 +19,7 @@ module.exports = {
   
   update: function(req, res) {
     try {
-      Type.update(req.headers['id'], req.body).exec(function afterwards(err, updated){
+      Type.update(req.body.id, req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
         console.log('Updated type: ' + JSON.stringify(updated));
         return res.json(updated);
@@ -35,6 +35,18 @@ module.exports = {
         //console.log('Found type/s: ' + JSON.stringify(result));
         return res.jsonp(result);
       });
+    } catch (e) { console.log(e); return res.jsonp(e); }
+  },
+  
+  search: function(req, res) {
+    try {
+      if (req.param('id') !== '') {
+        Type.findOne({ id: req.param('id')}).exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+            console.log(req.url + " results: " + JSON.stringify(results));
+            return res.jsonp(results);
+        });
+      }
     } catch (e) { console.log(e); return res.jsonp(e); }
   }
 };

@@ -128,7 +128,9 @@
             <div class="panel-body">
                  <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#tab-applicant-view" aria-controls="tab-applicant-view" role="tab" data-toggle="tab">Index Card</a></li>
-    <li role="presentation"><a href="#tab-applicant-create" aria-controls="tab-applicant-create" role="tab" data-toggle="tab">Create</a></li>
+    <% if (session.me.role !== "viewer") { %>
+        <li role="presentation"><a href="#tab-applicant-create" aria-controls="tab-applicant-create" role="tab" data-toggle="tab">Create</a></li>
+     <% } %>
   </ul>
 
   <!-- Tab panes -->
@@ -264,7 +266,9 @@
                             <input name="id" type="hidden" class="form-control">
                             <input name="updatedBy" type="hidden" value="<%= me.username %>">
                             <input name="role" type="hidden" value="<%= me.role %>">
+                            <% if (session.me.role !== "viewer") { %>
                             <button id="indexCard-btn-update" class="btn btn-success">Update</button>
+                            <% } %>
                         </div>
                     </form>
                 </div>
@@ -286,6 +290,7 @@
                 </div>
                 
             </div>
+            <% if (session.me.role !== "viewer") { %>
             <div class="row">
                 <div class="col-lg-4">
                     <h2>Log Transaction</h2>
@@ -294,56 +299,64 @@
                 </div>
                 <div class="col-lg-4" id="tab-applicant-indexCard-txListing"><h2>Transaction Listing</h2><a href="report/ledger?id=" target="_blank">Detailed View</a><br/><br/></div>
             </div>
+            <% } %>
             <div class="row">
-                <div class="col-xs-4">
-                    <!-- PAYMENT CREATE -->
-                    <form id="applicant-transaction-create">
-                        <div class="form-group">
-                           <input id="applicant-transaction-btn-reset" type="reset" class="btn btn-warning" value="New/Clear">
-                        </div>
-                        <div class="form-group">
-                            <label>Transation <i class="fa fa-check"></i></label>
-                            <select id="ddl-transaction" class="form-control">
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Type <i class="fa fa-check"></i></label>
-                            <select id="ddl-transaction-type" name="type" class="form-control">
-                                <option>(Select Type)</option>
-                            </select>
-                        </div>
-                        <div id="cont-transaction-center" class="form-group">
-                        </div>
-                        <div class="form-group">
-                            <label>Transaction Date <i class="fa fa-check"></i></label>
-                            <div class='input-group date' id='transaction-date-create'>
-                            <input name='transactionDate' type='text' class="form-control" placeholder="Transaction Date" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar">
-                                </span>
-                            </span>
+                <% if (session.me.role !== "viewer") { %>
+                    <div class="col-xs-4">
+                        <!-- PAYMENT CREATE -->
+                        <form id="applicant-transaction-create">
+                            <div class="form-group">
+                               <input id="applicant-transaction-btn-reset" type="reset" class="btn btn-warning" value="New/Clear">
                             </div>
+                            <div class="form-group">
+                                <label>Transation <i class="fa fa-check"></i></label>
+                                <select id="ddl-transaction" class="form-control">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Type <i class="fa fa-check"></i></label>
+                                <select id="ddl-transaction-type" name="type" class="form-control">
+                                    <option>(Select Type)</option>
+                                </select>
+                            </div>
+                            <div id="cont-transaction-center" class="form-group">
+                            </div>
+                            <div class="form-group">
+                                <label>Transaction Date <i class="fa fa-check"></i></label>
+                                <div class='input-group date' id='transaction-date-create'>
+                                <input name='transactionDate' type='text' class="form-control" placeholder="Transaction Date" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar">
+                                    </span>
+                                </span>
+                                </div>
+                            </div>
+                            <!--<div class="form-group" id="cont-transaction-actualCost">-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label>Amount <i class="fa fa-check"></i></label>
+                                <input name="amount" class="form-control" placeholder="Amount">
+                            </div>
+                            <div class="form-group" id="cont-transaction-servicefee">
+                            </div>
+                            <div class="form-group">
+                            <input name="owner" type="hidden" class="form-control" value="">
+                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                            <input name="role" type="hidden" value="<%= me.role %>">
+                            <button class="btn btn-warning">Save</button>
                         </div>
-                        <!--<div class="form-group" id="cont-transaction-actualCost">-->
-                        <!--</div>-->
-                        <div class="form-group">
-                            <label>Amount <i class="fa fa-check"></i></label>
-                            <input name="amount" class="form-control" placeholder="Amount">
-                        </div>
-                        <div class="form-group" id="cont-transaction-servicefee">
-                        </div>
-                        <div class="form-group">
-                        <input name="owner" type="hidden" class="form-control" value="">
-                        <input name="createdBy" type="hidden" value="<%= me.username %>">
-                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                        <input name="role" type="hidden" value="<%= me.role %>">
-                        <button class="btn btn-warning">Save</button>
+                        </form>
                     </div>
-                    </form>
-                </div>
-                <div id="cont-applicant-transactions" class="col-lg-8">
-                </div>
+                    <div id="cont-applicant-transactions" class="col-lg-8">
+                    </div>
+                <% } else { %>
+                    <div class="col-lg-12" id="tab-applicant-indexCard-txListing"><h2>Transaction Listing</h2><a href="report/ledger?id=" target="_blank">Detailed View</a><br/><br/></div>
+                    <div id="cont-applicant-transactions" class="col-lg-12">
+                    </div>
+                <% } %>
             </div>
+            
         </div>
     </div>
     <!-- CREATE APPLICANT TAB -->
@@ -565,6 +578,11 @@
                             <label>Amount <i class="fa fa-check"></i></label>
                             <input name="amount" class="form-control" placeholder="Amount">
                     </div>
+                    <div class="checkbox form-group">
+                        <label>
+                          <input id="chkbx-void" type="checkbox"> Void Transaction?
+                        </label>
+                    </div>
                     <div class="form-group" id="cont-transaction-servicefee">
                     </div>
                     <div class="form-group">
@@ -572,6 +590,7 @@
                         <input name="owner" type="hidden" class="form-control" value="">
                         <input name="updatedBy" type="hidden" value="<%= me.username %>">
                         <input name="role" type="hidden" value="<%= me.role %>">
+                        <input name="status" type="hidden" value="">
                     </div>
                     <div class="form-group">
                         <button name="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>

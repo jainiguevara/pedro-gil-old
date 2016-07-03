@@ -15,428 +15,202 @@
         </ol>
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-user fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge">12</div>
-                        <div>New Users!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-rocket fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge">12</div>
-                        <div>New Deployments!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-yellow">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-users fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge">124</div>
-                        <div>All Users!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-support fa-5x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div class="huge">13</div>
-                        <div>Support Tickets!</div>
-                    </div>
-                </div>
-            </div>
-            <a href="#">
-                <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
-<!-- /.row -->
-
+<!-- USER MAINTENANCE -->
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-primary">
+        <div class="panel panel-info">
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa fa-user fa-fw"></i> User</h3>
             </div>
             <div class="panel-body">
                  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#tab-user-view" aria-controls="tab-user-view" role="tab" data-toggle="tab">User Maintenance</a></li>
-    <li role="presentation"><a href="#tab-user-create" aria-controls="tab-user-create" role="tab" data-toggle="tab">Create</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <!-- USER VIEW TAB -->
-    <div role="tabpanel" class="tab-pane active" id="tab-user-view">
-                <div class='col-lg-12'>
-                    <br/>
-                    <a href="/dashboard" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
-                    <div class="table-responsive">
-                            <table id="table-user-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>Edit | View</th>
-                                        <th>Username</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Birthdate</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% if (typeof users !== 'undefined') {
-                                        for (var i=0; i < users.length; i++) { %>
-                                        <tr>
-                                            <td>
-                                                <a name="update:<%=users[i].id%>" href='#tab-user-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                                <a name="view:<%=users[i].id%>" href='#tab-user-view' role='tab' data-toggle='tab'><i class='fa fa-folder-open'></i></i></a>
-                                            </td>
-                                          <td><%=users[i].username %></td>
-                                          <td><%=users[i].firstName %></td>
-                                          <td><%=users[i].lastName %></td>
-                                          <td><%=users[i].dateOfBirth %></td>
-                                          <td><%=users[i].email %></td>
-                                          <td><%=users[i].role %></td>
-                                          <td><%=users[i].status %></td>
-                                        </tr>
-                                        <% }
-                                    }%>
-                                </tbody>
-                            </table>
-                        </div>
-                </div>
-    </div>
-    <!-- USER INDEX CARD TAB -->
-    <div role="tabpanel" class="tab-pane" id="tab-user-view">
-        <div class='col-lg-12'>
-            <div class="row">
-                <div class="col-lg-12">
-                    <br/>
-                    <a href="#tab-user-view" aria-controls="tab-user-view" role="tab" data-toggle="tab"><i class="fa fa-arrow-circle-left"></i> Go back</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <h2>User Index Card</h2><br/><br/>
-                    <div id="user-view-message" class="form-group">
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <h2>Transaction Summary</h2><br/><br/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3">
-                    <form id="user-view">
-                    <div class="form-group">
-                       <label>Username</label>
-                       <p name="username" class="form-control-static"></p>
-                    </div>
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <p name="firstName" class="form-control-static"></p>
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name</label>
-                        <p name="lastName" class="form-control-static"></p>
-                    </div>
-                    <div class="form-group">
-                        <label>Date of Birth</label>
-                         <p name="dateOfBirth" class="form-control-static"></p>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <p name="email" class="form-control-static"></p>
-                    </div>
-                    </form>
-                </div>
-                <div class="col-lg-3">
-                    <form id="user-view-col2">
-                        <div class="form-group">
-                            <label>CG</label>
-                            <p name="cg" class="form-control-static"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>PDOS</label>
-                            <p name="pdos" class="form-control-static"></p>
-                        </div>
-                        <div id="cont-principal" class="form-group">
-                        </div>
-                        <div id="cont-employer" class="form-group">
-                            <!-- to be continued: check whether employer has value, if not, display input field for update -->
-                            <!--<label>Employer</label>-->
-                            <!--<p name="employer" class="form-control-static"></p>-->
-                        </div>
-                        <div class="form-group">
-                            <label>Country</label>
-                            <p name="country" class="form-control-static"></p>
-                        </div>
-                        <div id="cont-deployment" class="form-group">
-                            <!--<label>Deployment Date</label>-->
-                            <!--<input name="dateDeployed" class="form-control" placeholder="Deployment Date">-->
-                        </div>
-                        <div class="form-group">
-                            <input name="id" type="hidden" class="form-control">
-                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                            <button id="view-btn-update" class="btn btn-success">Update</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-6">
-                    <form id="user-transaction-summary">
-                        <div class="form-group">
-                           <label>Total Payment</label>
-                           <p name="total-payment" class="form-control-static"></p>
-                        </div>
-                        <div class="form-group">
-                           <label>Total Expense</label>
-                           <p name="total-expense" class="form-control-static"></p>
-                        </div>
-                        <div class="form-group">
-                           <label>Total Service Fee</label>
-                           <p name="total-servicefee" class="form-control-static"></p>
-                        </div>
-                    </form>
-                </div>
+                    <li role="presentation" class="active"><a href="#tab-user-view" aria-controls="tab-user-view" role="tab" data-toggle="tab">Users View</a></li>
+                    <li role="presentation"><a href="#tab-user-create" aria-controls="tab-user-create" role="tab" data-toggle="tab">Create</a></li>
+                  </ul>
                 
-            </div>
-            <div class="row">
-                <div class="col-lg-6">
-                    <h2>Log Transaction</h2>
-                    <div id="user-transaction-message" class="form-group">
-                    </div>
-                </div>
-                <div class="col-lg-6"><h2>Transaction Listing</h2></div>
-            </div>
-            <div class="row">
-                <div class="col-xs-4">
-                    <!-- PAYMENT CREATE -->
-                    <form id="user-transaction-create">
-                        <div class="form-group">
-                           <input id="user-transaction-btn-reset" type="reset" class="btn btn-warning" value="New/Clear">
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                        <!-- USER VIEW TAB -->
+                        <div role="tabpanel" class="tab-pane active" id="tab-user-view">
+                                    <div class='col-lg-12'>
+                                        <br/>
+                                        <a href="/dashboard" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
+                                        <div class="table-responsive">
+                                                <table id="table-user-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Edit</th>
+                                                            <th>Username</th>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Birthdate</th>
+                                                            <th>Email</th>
+                                                            <th>Role</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if (typeof users !== 'undefined') {
+                                                            for (var i=0; i < users.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <a name="update:<%=users[i].id%>" href='#tab-user-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>
+                                                                </td>
+                                                              <td><%=users[i].username %></td>
+                                                              <td><%=users[i].firstName %></td>
+                                                              <td><%=users[i].lastName %></td>
+                                                              <td><%=users[i].dateOfBirth %></td>
+                                                              <td><%=users[i].email %></td>
+                                                              <td><%=users[i].role %></td>
+                                                              <td><%=users[i].status %></td>
+                                                            </tr>
+                                                            <% }
+                                                        }%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
                         </div>
-                        <div class="form-group">
-                            <label>Transation <i class="fa fa-check"></i></label>
-                            <select id="ddl-transaction" class="form-control">
-                            </select>
+                        <!-- CREATE USER TAB -->
+                        <div role="tabpanel" class="tab-pane" id="tab-user-create">
+                            <form id="user-create">
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <input id="user-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
+                                        <br/><br/>
+                                        <div id="user-create-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                           <label>Username <i class="fa fa-check"></i></label>
+                                           <input name="username" class="form-control" placeholder="Username">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>First Name <i class="fa fa-check"></i></label>
+                                            <input name="firstName" class="form-control" placeholder="First Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Last Name <i class="fa fa-check"></i></label>
+                                            <input name="lastName" class="form-control" placeholder="Last Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Date of Birth <i class="fa fa-check"></i></label>
+                                            <div class='input-group date' id='dateOfBirth-user-create'>
+                                            <input name='dateOfBirth' type='text' class="form-control" placeholder="Date of Birth" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar">
+                                                </span>
+                                            </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Email <i class="fa fa-check"></i></label>
+                                            <input name="email" class="form-control" placeholder="Email">
+                                        </div>
+                                        <!--ADD DROP DOWN LIST FOR USER ROLES-->
+                    		    	    <div class="form-group">
+                                            <label>Access Role <i class="fa fa-check"></i></label>
+                                            <select name="role" class="form-control">
+                                                <option>(Select Role)</option>
+                                                <option>accounts</option>
+                                                <option>admin</option>
+                                                <option>viewer</option>
+                                                <option>su</option>
+                                            </select>
+                                        </div>
+                    		    	    <!--ADD DROP DOWN LIST FOR USER ROLES-->
+                                        <div class="form-group">
+                                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                            <input name="password" type="hidden" value="">
+                                            <button class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label>Type <i class="fa fa-check"></i></label>
-                            <select id="ddl-transaction-type" name="type" class="form-control">
-                                <option>(Select Type)</option>
-                            </select>
+                        <!-- UPDATE USER TAB -->
+                        <div role="tabpanel" class="tab-pane" id="tab-user-update">
+                            <div class="col-lg-12">
+                                        <br/>
+                                        <a href="#tab-user-view" aria-controls="tab-user-view" role="tab" data-toggle="tab"><i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
+                                    </div>
+                            <div class="col-lg-6">
+                                        <form id="user-update">
+                                            <div class="form-group">
+                                                <h3>User: Update</h3><br/>
+                                                <div id="user-update-message" class="form-group">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                               <label>Username  <i class="fa fa-check"></i></label>
+                                               <!--<input name="username" class="form-control" placeholder="Username">-->
+                                               <p name="username" class="form-control-static"></p>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>First Name <i class="fa fa-check"></i></label>
+                                                <input name="firstName" class="form-control" placeholder="First Name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Last Name <i class="fa fa-check"></i></label>
+                                                <input name="lastName" class="form-control" placeholder="Last Name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Date of Birth <i class="fa fa-check"></i></label>
+                                                <input name="dateOfBirth" class="form-control" placeholder="Date of Birth">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email <i class="fa fa-check"></i></label>
+                                                <!--<input name="email" class="form-control" placeholder="Email">-->
+                                                <p name="email" class="form-control-static"></p>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Role <i class="fa fa-check"></i></label>
+                                                <select name="role" class="form-control">
+                                                    <option>(Select Role)</option>
+                                                <option>accounts</option>
+                                                <option>admin</option>
+                                                <option>su</option>
+                                                </select>
+                                            </div>
+                                            <div class="checkbox form-group">
+                                                <label>
+                                                  <input id="chkbx-status" type="checkbox"> Deactivate Account?
+                                                </label>
+                                            </div>
+                                            <div class="form-group">
+                                                <input name="id" type="hidden" class="form-control">
+                                                <input name="status" type="hidden" class="form-control">
+                                                <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                                <button class="btn btn-info">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                            <div class="col-lg-6">
+                                        <form id="user-reset">
+                                            <div class="form-group">
+                                                <h3>User: Reset Password</h3><br/>
+                                                <div id="user-reset-message" class="form-group">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                               <label>New Password  <i class="fa fa-check"></i></label>
+                                               <input name="password" type="password" class="form-control" placeholder="New Password">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Confirm Password <i class="fa fa-check"></i></label>
+                                                <input name="password2" type="password" class="form-control" placeholder="Confirm Password">
+                                            </div>
+                                            <div class="form-group">
+                                                <input name="id" type="hidden" class="form-control">
+                                                <input name="status" type="hidden" class="form-control">
+                                                <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                                <button class="btn btn-info">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
                         </div>
-                        <div class="form-group">
-                            <label>Amount <i class="fa fa-check"></i></label>
-                            <input name="amount" class="form-control" placeholder="Amount">
-                        </div>
-                        <div class="form-group" id="cont-transaction-servicefee">
-                        </div>
-                        <div class="form-group">
-                        <input name="owner" type="hidden" class="form-control" value="">
-                        <input name="createdBy" type="hidden" value="<%= me.username %>">
-                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                        <button class="btn btn-warning">Save</button>
-                    </div>
-                    </form>
-                </div>
-                <div class="col-lg-2">&nbsp;</div>
-                <div id="cont-user-transactions" class="col-lg-6">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- CREATE USER TAB -->
-    <div role="tabpanel" class="tab-pane" id="tab-user-create">
-        <form id="user-create">
-                <div class="col-lg-12">
-                    <br/>
-                    <input id="user-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
-                    <br/><br/>
-                    <div id="user-create-message" class="form-group">
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group">
-                       <label>Username <i class="fa fa-check"></i></label>
-                       <input name="username" class="form-control" placeholder="Username">
-                    </div>
-                    <div class="form-group">
-                        <label>First Name <i class="fa fa-check"></i></label>
-                        <input name="firstName" class="form-control" placeholder="First Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name <i class="fa fa-check"></i></label>
-                        <input name="lastName" class="form-control" placeholder="Last Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Date of Birth <i class="fa fa-check"></i></label>
-                        <input name="dateOfBirth" class="form-control" placeholder="Date of Birth">
-                    </div>
-                    <div class="form-group">
-                        <label>Email <i class="fa fa-check"></i></label>
-                        <input name="email" class="form-control" placeholder="Email">
-                    </div>
-                    <!--ADD DROP DOWN LIST FOR USER ROLES-->
-		    	    <div class="form-group">
-                        <label>Access Role <i class="fa fa-check"></i></label>
-                        <select name="role" class="form-control">
-                            <option>(Select Role)</option>
-                            <option>accounts</option>
-                            <option>admin</option>
-                            <option>su</option>
-                        </select>
-                    </div>
-		    	    <!--ADD DROP DOWN LIST FOR USER ROLES-->
-                    <div class="form-group">
-                        <input name="createdBy" type="hidden" value="<%= me.username %>">
-                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                        <input name="password" type="hidden" value="">
-                        <button class="btn btn-success">Save</button>
-                    </div>
-                </div>
-        </form>
-    </div>
-    <!-- UPDATE USER TAB -->
-    <div role="tabpanel" class="tab-pane" id="tab-user-update">
-        <div class="col-lg-12">
-                    <br/>
-                    <a href="#tab-user-view" aria-controls="tab-user-view" role="tab" data-toggle="tab"><i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
-                </div>
-        <div class="col-lg-6">
-                    <form id="user-update">
-                        <div class="form-group">
-                            <h3>User: Update</h3><br/>
-                            <div id="user-update-message" class="form-group">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                           <label>Username  <i class="fa fa-check"></i></label>
-                           <!--<input name="username" class="form-control" placeholder="Username">-->
-                           <p name="username" class="form-control-static"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>First Name <i class="fa fa-check"></i></label>
-                            <input name="firstName" class="form-control" placeholder="First Name">
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name <i class="fa fa-check"></i></label>
-                            <input name="lastName" class="form-control" placeholder="Last Name">
-                        </div>
-                        <div class="form-group">
-                            <label>Date of Birth <i class="fa fa-check"></i></label>
-                            <input name="dateOfBirth" class="form-control" placeholder="Date of Birth">
-                        </div>
-                        <div class="form-group">
-                            <label>Email <i class="fa fa-check"></i></label>
-                            <!--<input name="email" class="form-control" placeholder="Email">-->
-                            <p name="email" class="form-control-static"></p>
-                        </div>
-                        <div class="form-group">
-                            <label>Role <i class="fa fa-check"></i></label>
-                            <select name="role" class="form-control">
-                                <option>(Select Role)</option>
-                            <option>accounts</option>
-                            <option>admin</option>
-                            <option>su</option>
-                            </select>
-                        </div>
-                        <div class="checkbox form-group">
-                            <label>
-                              <input id="chkbx-status" type="checkbox"> Deactivate Account?
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <input name="id" type="hidden" class="form-control">
-                            <input name="status" type="hidden" class="form-control">
-                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                            <button class="btn btn-info">Update</button>
-                        </div>
-                    </form>
-                </div>
-        <div class="col-lg-6">
-                    <form id="user-reset">
-                        <div class="form-group">
-                            <h3>User: Reset Password</h3><br/>
-                            <div id="user-reset-message" class="form-group">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                           <label>New Password  <i class="fa fa-check"></i></label>
-                           <input name="password" type="password" class="form-control" placeholder="Username">
-                        </div>
-                        <div class="form-group">
-                            <label>Confirm Password <i class="fa fa-check"></i></label>
-                            <input name="password2" type="password" class="form-control" placeholder="First Name">
-                        </div>
-                        <div class="form-group">
-                            <input name="id" type="hidden" class="form-control">
-                            <input name="status" type="hidden" class="form-control">
-                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                            <button class="btn btn-info">Update</button>
-                        </div>
-                    </form>
-                </div>
-    </div>
-  </div>
+                  </div>
 
             </div>
         </div>
@@ -444,51 +218,450 @@
 </div>
 <!-- /.row -->
 
-<!-- Modals -->
-<div class="modal fade" id="transaction-update" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="transaction-updateLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Update Transaction</h4>
-      </div>
-      <div class="modal-body">
-            <form id="user-transaction-update">
-                <div class="form-group">
-                            <div id="user-transaction-update-message" class="form-group">
+<!-- CENTER MAINTENANCE -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa fa-building fa-fw"></i> Payment / Training Centers</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs" role="tablist">
+                   <li role="presentation" class="active"><a href="#tab-center-view" aria-controls="tab-center-view" role="tab" data-toggle="tab">Centers View</a></li>
+                   <li role="presentation"><a href="#tab-center-create" aria-controls="tab-center-create" role="tab" data-toggle="tab">Create</a></li>
+                </ul>
+                 <!-- Tab panes -->
+                <div class="tab-content">
+                      <!-- CENTER VIEW TAB -->
+                      <div role="tabpanel" class="tab-pane active" id="tab-center-view">
+                                    <div class='col-lg-6'>
+                                        <br/>
+                                        <a href="/adminportal" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
+                                        <div class="table-responsive">
+                                                <table id="table-center-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Edit</th>
+                                                            <th>Name</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if (typeof centers !== 'undefined') {
+                                                            for (var i=0; i < centers.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <a name="update:<%=centers[i].id%>" href='#tab-center-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>
+                                                                </td>
+                                                              <td><%=centers[i].name %></td>
+                                                              <td><%=centers[i].status %></td>
+                                                            </tr>
+                                                            <% }
+                                                        }%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                        </div>
+                      <!-- CREATE CENTER TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-center-create">
+                            <form id="center-create">
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <input id="center-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
+                                        <br/><br/>
+                                        <div id="center-create-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                           <label>Name <i class="fa fa-check"></i></label>
+                                           <input name="name" class="form-control" placeholder="Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                            <button class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                      <!-- UPDATE CENTER TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-center-update">
+                            <div class="col-lg-12">
+                                        <br/>
+                                        <a href="#tab-center-view" aria-controls="tab-center-view" role="tab" data-toggle="tab"><i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
+                                    </div>
+                            <div class="col-lg-4">
+                                <form id="center-update">
+                                    <div class="form-group">
+                                        <h3>Center: Update</h3><br/>
+                                        <div id="center-update-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                       <label>Name  <i class="fa fa-check"></i></label>
+                                       <input name="name" class="form-control" placeholder="Name">
+                                       
+                                    </div>
+                                    <div class="checkbox form-group">
+                                        <label>
+                                          <input id="chkbx-center-status" type="checkbox"> Deactivate Center?
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="id" type="hidden" class="form-control">
+                                        <input name="status" type="hidden" class="form-control">
+                                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                        <button class="btn btn-info">Update</button>
+                                    </div>
+                                </form>
                             </div>
-                    </div>
-                    <div class="form-group">
-                            <label>Transation <i class="fa fa-check"></i></label>
-                            <select name="transaction" class="form-control">
-                            </select>
-                    </div>
-                    <div class="form-group">
-                            <label>Type <i class="fa fa-check"></i></label>
-                            <select name="type" name="type" class="form-control">
-                                <option>(Select Type)</option>
-                            </select>
-                    </div>
-                    <div class="form-group">
-                            <label>Amount <i class="fa fa-check"></i></label>
-                            <input name="amount" class="form-control" placeholder="Amount">
-                    </div>
-                    <div class="form-group" id="cont-transaction-servicefee">
-                    </div>
-                    <div class="form-group">
-                        <input name="id" type="hidden" class="form-control" value="">
-                        <input name="owner" type="hidden" class="form-control" value="">
-                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
-                    </div>
-                    <div class="form-group">
-                        <button name="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary">Save changes</button>
-                    </div>
-            </form>
-      </div>
-      <div class="modal-footer">
-      </div>
+                        </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
+<!-- /.row -->
+
+<!-- COUNTRY MAINTENANCE -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa fa-globe fa-fw"></i> Country</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs" role="tablist">
+                   <li role="presentation" class="active"><a href="#tab-country-view" aria-controls="tab-country-view" role="tab" data-toggle="tab">Countries View</a></li>
+                   <li role="presentation"><a href="#tab-country-create" aria-controls="tab-country-create" role="tab" data-toggle="tab">Create</a></li>
+                </ul>
+                 <!-- Tab panes -->
+                <div class="tab-content">
+                      <!-- COUNTRY VIEW TAB -->
+                      <div role="tabpanel" class="tab-pane active" id="tab-country-view">
+                                    <div class='col-lg-6'>
+                                        <br/>
+                                        <a href="/adminportal" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
+                                        <div class="table-responsive">
+                                                <table id="table-country-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Edit</th>
+                                                            <th>Name</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if (typeof countries !== 'undefined') {
+                                                            for (var i=0; i < countries.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <a name="update:<%=countries[i].id%>" href='#tab-country-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>
+                                                                </td>
+                                                              <td><%=countries[i].name %></td>
+                                                              <td><%=countries[i].status %></td>
+                                                            </tr>
+                                                            <% }
+                                                        }%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                        </div>
+                      <!-- CREATE COUNTRY TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-country-create">
+                            <form id="country-create">
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <input id="country-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
+                                        <br/><br/>
+                                        <div id="country-create-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                           <label>Name <i class="fa fa-check"></i></label>
+                                           <input name="name" class="form-control" placeholder="Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                            <button class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                      <!-- UPDATE COUNTRY TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-country-update">
+                            <div class="col-lg-12">
+                                        <br/>
+                                        <a href="#tab-country-view" aria-controls="tab-country-view" role="tab" data-toggle="tab"><i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
+                                    </div>
+                            <div class="col-lg-4">
+                                <form id="country-update">
+                                    <div class="form-group">
+                                        <h3>Country: Update</h3><br/>
+                                        <div id="country-update-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                       <label>Name  <i class="fa fa-check"></i></label>
+                                       <input name="name" class="form-control" placeholder="Name">
+                                    </div>
+                                    <div class="checkbox form-group">
+                                        <label>
+                                          <input id="chkbx-country-status" type="checkbox"> Deactivate Country?
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="id" type="hidden" class="form-control">
+                                        <input name="status" type="hidden" class="form-control">
+                                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                        <button class="btn btn-info">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+
+<!-- TIE-UP MAINTENANCE -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa fa-cubes fa-fw"></i> Tie-Up</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs" role="tablist">
+                   <li role="presentation" class="active"><a href="#tab-tieup-view" aria-controls="tab-tieup-view" role="tab" data-toggle="tab">Tie-Ups View</a></li>
+                   <li role="presentation"><a href="#tab-tieup-create" aria-controls="tab-tieup-create" role="tab" data-toggle="tab">Create</a></li>
+                </ul>
+                 <!-- Tab panes -->
+                <div class="tab-content">
+                      <!-- TIEUP VIEW TAB -->
+                      <div role="tabpanel" class="tab-pane active" id="tab-tieup-view">
+                                    <div class='col-lg-6'>
+                                        <br/>
+                                        <a href="/adminportal" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
+                                        <div class="table-responsive">
+                                                <table id="table-tieup-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Edit</th>
+                                                            <th>Name</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if (typeof tieups !== 'undefined') {
+                                                            for (var i=0; i < tieups.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <a name="update:<%=tieups[i].id%>" href='#tab-tieup-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>
+                                                                </td>
+                                                              <td><%=tieups[i].name %></td>
+                                                              <td><%=tieups[i].status %></td>
+                                                            </tr>
+                                                            <% }
+                                                        }%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                        </div>
+                      <!-- CREATE TIEUP TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-tieup-create">
+                            <form id="tieup-create">
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <input id="tieup-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
+                                        <br/><br/>
+                                        <div id="tieup-create-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                           <label>Name <i class="fa fa-check"></i></label>
+                                           <input name="name" class="form-control" placeholder="Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                            <button class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                      <!-- UPDATE TIEUP TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-tieup-update">
+                            <div class="col-lg-12">
+                                        <br/>
+                                        <a href="#tab-tieup-view" aria-controls="tab-tieup-view" role="tab" data-toggle="tab">
+                                            <i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
+                                    </div>
+                            <div class="col-lg-4">
+                                <form id="tieup-update">
+                                    <div class="form-group">
+                                        <h3>Tie-up: Update</h3><br/>
+                                        <div id="tieup-update-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                       <label>Name  <i class="fa fa-check"></i></label>
+                                       <input name="name" class="form-control" placeholder="Name">
+                                    </div>
+                                    <div class="checkbox form-group">
+                                        <label>
+                                          <input id="chkbx-tieup-status" type="checkbox"> Deactivate Tie-up?
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="id" type="hidden" class="form-control">
+                                        <input name="status" type="hidden" class="form-control">
+                                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                        <button class="btn btn-info">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+
+<!-- TYPE MAINTENANCE -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa fa-quote-left fa-fw"></i> Type</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs" role="tablist">
+                   <li role="presentation" class="active"><a href="#tab-type-view" aria-controls="tab-type-view" role="tab" data-toggle="tab">Types View</a></li>
+                   <li role="presentation"><a href="#tab-type-create" aria-controls="tab-type-create" role="tab" data-toggle="tab">Create</a></li>
+                </ul>
+                 <!-- Tab panes -->
+                <div class="tab-content">
+                      <!-- TYPE VIEW TAB -->
+                      <div role="tabpanel" class="tab-pane active" id="tab-type-view">
+                                    <div class='col-lg-6'>
+                                        <br/>
+                                        <a href="/adminportal" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</a><br/><br/>
+                                        <div class="table-responsive">
+                                                <table id="table-type-results" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Edit</th>
+                                                            <th>Name</th>
+                                                            <th>Module</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% if (typeof types !== 'undefined') {
+                                                            for (var i=0; i < types.length; i++) { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <a name="update:<%=types[i].id%>" href='#tab-type-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>
+                                                                </td>
+                                                              <td><%=types[i].description %></td>
+                                                              <td><%=types[i].module === 1 ? "Payment" : "Expense" %></td>
+                                                              <td><%=types[i].status %></td>
+                                                            </tr>
+                                                            <% }
+                                                        }%>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                    </div>
+                        </div>
+                      <!-- CREATE TYPE TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-type-create">
+                            <form id="type-create">
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <input id="type-create-btn-reset" type="reset" class="btn btn-success" value="New/Clear">
+                                        <br/><br/>
+                                        <div id="type-create-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                           <label>Description <i class="fa fa-check"></i></label>
+                                           <input name="description" class="form-control" placeholder="Name">
+                                        </div>
+                                        <div class="form-group">
+                                           <label>Module <i class="fa fa-check"></i></label>
+                                           <select id="ddlModule-create" class="form-control">
+                                                <option>(Select Type)</option>
+                                                <option id="1">Payment</option>
+                                                <option id="2">Expense</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="module" type="hidden" value="">
+                                            <input name="createdBy" type="hidden" value="<%= me.username %>">
+                                            <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                            <button class="btn btn-success">Save</button>
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                      <!-- UPDATE TYPE TAB -->
+                      <div role="tabpanel" class="tab-pane" id="tab-type-update">
+                            <div class="col-lg-12">
+                                        <br/>
+                                        <a href="#tab-type-view" aria-controls="tab-type-view" role="tab" data-toggle="tab">
+                                            <i class="fa fa-arrow-circle-left"></i> Go back</a><br/><br/>
+                                    </div>
+                            <div class="col-lg-4">
+                                <form id="type-update">
+                                    <div class="form-group">
+                                        <h3>Type: Update</h3><br/>
+                                        <div id="type-update-message" class="form-group">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                       <label>Description  <i class="fa fa-check"></i></label>
+                                       <input name="description" class="form-control" placeholder="Description">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Module <i class="fa fa-check"></i></label>
+                                        <select id="ddlModule-update" class="form-control">
+                                             <option>(Select Module)</option>
+                                             <option id="1">Payment</option>
+                                             <option id="2">Expense</option>
+                                        </select>
+                                    </div>
+                                    <div class="checkbox form-group">
+                                        <label>
+                                          <input id="chkbx-type-status" type="checkbox"> Deactivate Type?
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="id" type="hidden" class="form-control">
+                                        <input name="module" type="hidden" class="form-control">
+                                        <input name="status" type="hidden" class="form-control">
+                                        <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                                        <button class="btn btn-info">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
 </html>

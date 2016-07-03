@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-create: function (req, res) {
+  create: function (req, res) {
     try {
       Center.create(req.body).exec(function centerMade(err, created)
       {
@@ -21,7 +21,7 @@ create: function (req, res) {
     try {
       Center.update(req.body.id, req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Center expense: ' + JSON.stringify(updated));
+        console.log('Updated center: ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
@@ -36,6 +36,18 @@ create: function (req, res) {
         return res.jsonp(result);
       });
     } catch (e) { console.log(e); return res.jsonp(e); }
-  }	
+  },
+  
+  search: function(req, res) {
+    try {
+      if (req.param('id') !== '') {
+        Center.findOne({ id: req.param('id')}).exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+            console.log(req.url + " results: " + JSON.stringify(results));
+            return res.jsonp(results);
+        });
+      }
+    } catch (e) { console.log(e); return res.jsonp(e); }
+  }
 };
 

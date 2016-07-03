@@ -25,7 +25,8 @@ function fillTransactionsTable(res, role) {
             value = value + "<tr>";
             if (role == "su" | role == "admin") {
                 value = value +
-                "<td><a name='" + result.id + ":Payment:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + result.owner +
+                "<td><a name='" + result.id + ":Payment:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + 
+                result.amount + ":" + result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Payment</td>";
@@ -44,9 +45,8 @@ function fillTransactionsTable(res, role) {
             value = value + "<tr>";
             if (role == "su" | role == "admin") {
                 value = value +
-                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + result.amount + ":" + 
-                //result.actualCost + ":" + 
-                result.owner +
+                "<td><a name='" + result.id + ":Expense:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + 
+                result.amount + ":" + result.owner +
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Expense</td>" +
@@ -122,20 +122,20 @@ function loadApplicantTransaction(arr) {
                 $("#applicant-transaction-update select[name='type']").val(arr[2]);
                 $("#applicant-transaction-update input[name='transactionDate']").val(arr[3]);
                 $("#applicant-transaction-update input[name='amount']").val(arr[4]);
-                if (arr[1] === 'Expense')
-                {
-                    // $('#cont-transaction-update-actualCost').html(
-                    //     "<label>Actual Cost <i class='fa fa-check'></i></label>" +
-                    //         "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
-                    //     );
-                    //$("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
-                    $("#applicant-transaction-update input[name='owner']").val(arr[6]);
-                }   
-                else
-                {
-                    //$('#cont-transaction-update-actualCost').html('');
+                // if (arr[1] === 'Expense')
+                // {
+                //     // $('#cont-transaction-update-actualCost').html(
+                //     //     "<label>Actual Cost <i class='fa fa-check'></i></label>" +
+                //     //         "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
+                //     //     );
+                //     //$("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
+                //     $("#applicant-transaction-update input[name='owner']").val(arr[6]);
+                // }   
+                // else
+                // {
+                //     //$('#cont-transaction-update-actualCost').html('');
                     $("#applicant-transaction-update input[name='owner']").val(arr[5]);
-                }
+                // }
                 
             }
         }
@@ -188,7 +188,7 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard p[name='dateOfBirth']").text(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-indexCard p[name='passportNo']").text(res.passportNo);
                         //OEC
-                        if (res.oec === "") {
+                        if (res.oec === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $('#cont-oec').html(
                                 "<label>OEC <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"oec\" class=\"form-control\" placeholder=\"OEC\">"
@@ -201,7 +201,7 @@ function loadApplicantData(arr) {
                                 );
                         }
                         //CG
-                        if (res.cg === "") {
+                        if (res.cg === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $('#cont-cg').html(
                                 "<label>CG <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"cg\" class=\"form-control\" placeholder=\"CG\">"
@@ -214,7 +214,7 @@ function loadApplicantData(arr) {
                                 );
                         }
                         //PDOS
-                        if (res.pdos === "") {
+                        if (res.pdos === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $('#cont-pdos').html(
                                 "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"pdos\" class=\"form-control\" placeholder=\"PDOS\">"
@@ -227,7 +227,7 @@ function loadApplicantData(arr) {
                                 );
                         }
                         //Eployer
-                        if (res.employer === "") {
+                        if (res.employer === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $('#cont-employer').html(
                                 "<label>Employer <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"employer\" class=\"form-control\" placeholder=\"Employer\">"
@@ -243,7 +243,7 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard-col2 p[name='country']").text(res.country);
                         $("#applicant-indexCard-col2 input[name='id']").val(res.id);
                         $("#applicant-transaction-create input[name='owner']").val(res.id);
-                        if (res.dateDeployed === undefined) {
+                        if (res.dateDeployed === undefined & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $("#cont-deployment").html(
                                 "<label>Deployment Date <i class=\"fa fa-check\"></i></label>" + 
                                 "<div class='input-group date' id='deploymentDate-applicant-view'>" +
@@ -276,6 +276,7 @@ function loadApplicantData(arr) {
                                 "<option id=\"2\">Expense</option>"
                                 );
                         } else {
+                            if ($("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
                             $.ajax({
                                 url: uri + "tieup/get",
                                 type: "GET",
@@ -298,6 +299,13 @@ function loadApplicantData(arr) {
                                     "<option id=\"2\">Expense</option>"
                                     );
                             }});
+                            } else {
+                                $("#cont-principal").html(
+                                "<label>Principal (Tie-Up) <i class=\"fa fa-check\"></i></label>" +
+                                "<p class=\"form-control-static\">" + res.principal + "</p>" +
+                                "<input name=\"principal\" type=\"hidden\" value=\"" + res.principal + "\">"
+                                );
+                            }
                         }
                         /* FILL INDEX CARD VIEW */
                         /* FILL TRANSACTIONS TABLE */
@@ -325,51 +333,6 @@ $('#table-applicant-results a').on('click', function(event){
     $("#applicant-transaction-message").html("");
     loadApplicantData(arr);
 });
-
-
-// $('#applicant-search').on("click", 'a', function(event) {
-//   event.preventDefault();
-//   $('#applicant-btn-search').submit();
-// });
-// $('#applicant-search').submit(function(event) {
-//   event.preventDefault();
-//   var data = $('#applicant-search').serialize();
-//     $.ajax({
-//         url: uri + "applicant/search",
-//         // headers: {
-//         //     "Authorization": id + ":" + key
-//         // },
-//         type: "GET",
-//         data: data,
-//         success: function applicantSearched(res) {
-//             $('#table-applicant-results').DataTable();
-//             var table = "";
-//             $.each(res, function(d, result){
-//                 table = table + "<tr>"
-//                       + "<td>"
-//                         + "<a href='#tab-applicant-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;"
-//                         + "<a href='#tab-applicant-indexCard' role='tab' data-toggle='tab'><i class='fa fa-folder-open'></i></i></a>"
-//                       +  "</td>"
-//                       + "<td>" + result.referenceNo + "</td>"
-//                       + "<td>" + result.firstName + "</td>"
-//                       + "<td>" + result.lastName + "</td>"
-//                       + "<td>" + result.dateOfBirth + "</td>"
-//                       + "<td>" + result.passportNo + "</td>"
-//                     + "</tr>" 
-//             });
-//             $("#table-applicant-results tbody").html(table);
-//         },
-//         statusCode:  {
-//             404: function (content) { alert(content.message.value); },
-//             403: function (content) { alert(content.message.value); },
-//             500: function (content) { alert(content.message.value); }
-//         },
-//         error: function (res) {
-//             alert(JSON.stringify(res));
-//         }
-//     });
-// });
-
 
 $('#applicant-create').on("submit", function(event) {
   event.preventDefault();
@@ -545,6 +508,8 @@ $('#ddl-transaction').change(function(event) {
 $('#ddl-transaction-type').change(function(event) {
   event.preventDefault();
   var type = $('#ddl-transaction-type option:selected').val();
+  
+  //REBATE REFERENCE
   if (type === "Rebate")
   {
          waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
@@ -584,6 +549,7 @@ $('#ddl-transaction-type').change(function(event) {
   } else {
       $('#cont-transaction-center').html('');
   }
+  //
 });
 
 $('#applicant-transaction-create').on("submit", function(event) {
@@ -645,6 +611,10 @@ $('#applicant-transaction-update').on("submit", function(event) {
       case "Expense":  module = 2; break;
       case "ServiceFee":  module = 3; break;
   };
+  if ($("#chkbx-void").is(":checked"))
+        $("#applicant-transaction-update input[name='status']").val(0);
+    else
+        $("#applicant-transaction-update input[name='status']").val(1);
   var data = $('#applicant-transaction-update').serialize();
   if ($("#applicant-transaction-update select[name='type'] option:selected").val() === '(Select Type)' & 
   $("#applicant-transaction-update input[name='amount']").val() === '') {
@@ -709,6 +679,7 @@ function getValidationError(object) {
 }
 
 //ADMIN
+//USER MAINTENANCE
 function loadUserData(arr) {
     try {
         waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
@@ -768,7 +739,6 @@ function loadUserData(arr) {
     
 }
 
-
 $('#table-user-results a').on('click', function(event){
     event.preventDefault();
     var arr = null;
@@ -779,7 +749,7 @@ $('#table-user-results a').on('click', function(event){
 
 $('#user-create').on("submit", function(event) {
   event.preventDefault();
-  if ($("#user-create input[name='role'] option:selected").val() === '(Select Role)') {
+  if ($("#user-create select[name='role'] option:selected").val() === '(Select Role)') {
         getValidationError('#user-create-message');
         return;
    }
@@ -791,16 +761,19 @@ $('#user-create').on("submit", function(event) {
         type: "POST",
         data: data,
         success: function (res) {
+            
             if (res.error)
             {  
                 $('#user-create-message').html(function createMessage(){
                     var message = "";
-                    if (res.invalidAttributes.username[0].rule === 'unique')
-                        message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
-                    else if (res.invalidAttributes.email[0].rule === 'unique')
-                     message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.email[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
-                    else
+                    if (res.error === "E_VALIDATION") 
                         message = message + "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    else {
+                        if (res.invalidAttributes.username[0].rule === 'unique')
+                            message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                        else if (res.invalidAttributes.email[0].rule === 'unique')
+                         message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.email[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    }
                     return message;
                 });
                 return;
@@ -828,7 +801,7 @@ $('#user-update').on("submit", function(event) {
         return;
    }
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
-   if ($("#chkbx-status").is(":checked"))
+    if ($("#chkbx-status").is(":checked"))
         $("#user-update input[name='status']").val(0);
     else
         $("#user-update input[name='status']").val(1);
@@ -912,6 +885,536 @@ $('#user-reset').on("submit", function(event) {
         window.setTimeout(waitingDialog.hide(),2000);
     });;
 });
+//USER MAINTENANCE
+
+//CENTER MAINTENANCE
+function loadCenterData(arr) {
+    try {
+        waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+            $.ajax({
+                url: uri + "center/search?id=" + arr[1],
+                type: "GET",
+                dataType: "jsonp",
+                success: function centerSearched(res) {
+                    if (arr[0] === 'update') {
+                        if (res.error) { 
+                            getInternalError('#center-update-message'); 
+                            window.setTimeout(waitingDialog.hide(),2000);
+                            return; 
+                        }
+                        $("#center-update input[name='name']").val(res.name);
+                        $("#center-update input[name='id']").val(res.id);
+                        if (res.status === 0)
+                         $("#chkbx-center-status").prop('checked', true); 
+                    } 
+                }
+            }).done(function() {
+                window.setTimeout(waitingDialog.hide(),2000);
+            }).error(function(err){
+                if (arr[0] === 'update') getInternalError('#center-update-message');
+                window.setTimeout(waitingDialog.hide(),2000);
+            });
+    } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
+    
+}
+
+$('#table-center-results a').on('click', function(event){
+    event.preventDefault();
+    var arr = null;
+    arr = $(this).attr('name').split(":");
+    $("#center-view-message").html("");
+    loadCenterData(arr);
+});
+
+$('#center-create').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#center-create input[name='name']").val() === '') {
+        getValidationError('#center-create-message');
+        return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+   var data = $('#center-create').serialize();
+    $.ajax({
+        url: uri + "center/create",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            
+            if (res.error)
+            {  
+                $('#center-create-message').html(function createMessage(){
+                    var message = "";
+                    if (res.error === "E_VALIDATION") 
+                        message = message + "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                        "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    else {
+                        if (res.invalidAttributes.name[0].rule === 'unique')
+                            message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ 
+                            res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    }
+                    return message;
+                });
+                return;
+            } else {
+                $('#center-create-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Center created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+                $('#center-create-btn-reset').click();
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#center-create-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });
+});
+
+$('#center-update').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#center-update input[name='name']").val() === '') {
+    getValidationError('#center-create-message');
+    return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+    if ($("#chkbx-center-status").is(":checked"))
+        $("#center-update input[name='status']").val(0);
+    else
+        $("#center-update input[name='status']").val(1);
+    var data = $('#center-update').serialize();
+    $.ajax({
+        url: uri + "center/update",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            if (res.error)
+            {  
+                $('#center-update-message').html(function createMessage(){
+                    var message = "";
+                    message = "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                    "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    return message;
+                });
+                return;
+            } else {
+                $('#center-update-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Center updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#center-update-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });;
+});
+//CENTER MAINTENANCE
+
+//COUNTRY MAINTENANCE
+function loadCountryData(arr) {
+    try {
+        waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+            $.ajax({
+                url: uri + "country/search?id=" + arr[1],
+                type: "GET",
+                dataType: "jsonp",
+                success: function countrySearched(res) {
+                    if (arr[0] === 'update') {
+                        if (res.error) { 
+                            getInternalError('#country-update-message'); 
+                            window.setTimeout(waitingDialog.hide(),2000);
+                            return; 
+                        }
+                        $("#country-update input[name='name']").val(res.name);
+                        $("#country-update input[name='id']").val(res.id);
+                        if (res.status === 0)
+                         $("#chkbx-country-status").prop('checked', true); 
+                    } 
+                }
+            }).done(function() {
+                window.setTimeout(waitingDialog.hide(),2000);
+            }).error(function(err){
+                if (arr[0] === 'update') getInternalError('#country-update-message');
+                window.setTimeout(waitingDialog.hide(),2000);
+            });
+    } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
+    
+}
+
+$('#table-country-results a').on('click', function(event){
+    event.preventDefault();
+    var arr = null;
+    arr = $(this).attr('name').split(":");
+    $("#country-view-message").html("");
+    loadCountryData(arr);
+});
+
+$('#country-create').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#country-create input[name='name']").val() === '') {
+        getValidationError('#country-create-message');
+        return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+   var data = $('#country-create').serialize();
+    $.ajax({
+        url: uri + "country/create",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            
+            if (res.error)
+            {  
+                $('#country-create-message').html(function createMessage(){
+                    var message = "";
+                    console.log(res);
+                    if (res.error === "E_VALIDATION") 
+                        message = message + "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                        "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    else {
+                        if (res.invalidAttributes.name[0].rule === 'unique')
+                            message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ 
+                            res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    }
+                    return message;
+                });
+                return;
+            } else {
+                $('#country-create-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Country created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+                $('#country-create-btn-reset').click();
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#country-create-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });
+});
+
+$('#country-update').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#country-update input[name='name']").val() === '') {
+    getValidationError('#country-create-message');
+    return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+    if ($("#chkbx-country-status").is(":checked"))
+        $("#country-update input[name='status']").val(0);
+    else
+        $("#country-update input[name='status']").val(1);
+    var data = $('#country-update').serialize();
+    $.ajax({
+        url: uri + "country/update",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            if (res.error)
+            {  
+                console.log('update error : ' + res)
+                $('#country-update-message').html(function createMessage(){
+                    var message = "";
+                    message = "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                    "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    return message;
+                });
+                return;
+            } else {
+                $('#country-update-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Country updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#country-update-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });;
+});
+//COUNTRY MAINTENANCE
+
+//TIEUP MAINTENANCE
+function loadTieupData(arr) {
+    try {
+        waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+            $.ajax({
+                url: uri + "tieup/search?id=" + arr[1],
+                type: "GET",
+                dataType: "jsonp",
+                success: function tieupSearched(res) {
+                    if (arr[0] === 'update') {
+                        if (res.error) { 
+                            getInternalError('#tieup-update-message'); 
+                            window.setTimeout(waitingDialog.hide(),2000);
+                            return; 
+                        }
+                        $("#tieup-update input[name='name']").val(res.name);
+                        $("#tieup-update input[name='id']").val(res.id);
+                        if (res.status === 0)
+                         $("#chkbx-tieup-status").prop('checked', true); 
+                    } 
+                }
+            }).done(function() {
+                window.setTimeout(waitingDialog.hide(),2000);
+            }).error(function(err){
+                if (arr[0] === 'update') getInternalError('#tieup-update-message');
+                window.setTimeout(waitingDialog.hide(),2000);
+            });
+    } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
+}
+
+$('#table-tieup-results a').on('click', function(event){
+    event.preventDefault();
+    var arr = null;
+    arr = $(this).attr('name').split(":");
+    $("#tieup-view-message").html("");
+    loadTieupData(arr);
+});
+
+$('#tieup-create').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#tieup-create input[name='name']").val() === '') {
+        getValidationError('#tieup-create-message');
+        return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+   var data = $('#tieup-create').serialize();
+    $.ajax({
+        url: uri + "tieup/create",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            
+            if (res.error)
+            {  
+                $('#tieup-create-message').html(function createMessage(){
+                    var message = "";
+                    console.log(res);
+                    if (res.error === "E_VALIDATION") 
+                        message = message + "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                        "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    else {
+                        if (res.invalidAttributes.name[0].rule === 'unique')
+                            message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ 
+                            res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    }
+                    return message;
+                });
+                return;
+            } else {
+                $('#tieup-create-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Tieup created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+                $('#tieup-create-btn-reset').click();
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#tieup-create-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });
+});
+
+$('#tieup-update').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#tieup-update input[name='name']").val() === '') {
+    getValidationError('#tieup-create-message');
+    return;
+  }
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+    if ($("#chkbx-tieup-status").is(":checked"))
+        $("#tieup-update input[name='status']").val(0);
+    else
+        $("#tieup-update input[name='status']").val(1);
+    var data = $('#tieup-update').serialize();
+    $.ajax({
+        url: uri + "tieup/update",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            if (res.error)
+            {
+                $('#tieup-update-message').html(function createMessage(){
+                    var message = "";
+                    message = "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                    "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    return message;
+                });
+                return;
+            } else {
+                $('#tieup-update-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Tieup updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#tieup-update-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });;
+});
+//TIEUP MAINTENANCE
+
+//TYPE MAINTENANCE
+function loadTypeData(arr) {
+    try {
+        waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+            $.ajax({
+                url: uri + "type/search?id=" + arr[1],
+                type: "GET",
+                dataType: "jsonp",
+                success: function typeSearched(res) {
+                    if (arr[0] === 'update') {
+                        if (res.error) { 
+                            getInternalError('#type-update-message'); 
+                            window.setTimeout(waitingDialog.hide(),2000);
+                            return; 
+                        }
+                        $("#type-update input[name='description']").val(res.description);
+                        $("#type-update input[name='id']").val(res.id);
+                        if (res.status === 0)
+                         $("#chkbx-type-status").prop('checked', true);
+                        $("#type-update input[name='module']").val(res.module);
+                        if (res.module === 1)
+                            $('#ddlModule-update').val('Payment');
+                        else if (res.module === 2)
+                            $('#ddlModule-update').val('Expense');
+                    } 
+                }
+            }).done(function() {
+                window.setTimeout(waitingDialog.hide(),2000);
+            }).error(function(err){
+                if (arr[0] === 'update') getInternalError('#type-update-message');
+                window.setTimeout(waitingDialog.hide(),2000);
+            });
+    } catch (e) { alert(e); window.setTimeout(waitingDialog.hide(),2000); }
+}
+
+$('#table-type-results a').on('click', function(event){
+    event.preventDefault();
+    var arr = null;
+    arr = $(this).attr('name').split(":");
+    $("#type-view-message").html("");
+    loadTypeData(arr);
+});
+
+$('#type-create').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#type-create input[name='name']").val() === '') {
+        getValidationError('#type-create-message');
+        return;
+  }
+  if ($('#ddlModule-create option:selected').val() === '(Select Module)') {
+        getValidationError('#applicant-create-message');
+        return;
+  }
+  $("#type-create input[name='module']").val($('#ddlModule-create option:selected').attr("id"));
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+   var data = $('#type-create').serialize();
+    $.ajax({
+        url: uri + "type/create",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            
+            if (res.error)
+            {  
+                $('#type-create-message').html(function createMessage(){
+                    var message = "";
+                    console.log(res);
+                    if (res.error === "E_VALIDATION") 
+                        message = message + "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                        "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    else {
+                        if (res.invalidAttributes.name[0].rule === 'unique')
+                            message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ 
+                            res.invalidAttributes.username[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    }
+                    return message;
+                });
+                return;
+            } else {
+                $('#type-create-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Type created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+                $('#type-create-btn-reset').click();
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#type-create-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });
+});
+
+$('#type-update').on("submit", function(event) {
+  event.preventDefault();
+  if ($("#type-update input[name='description']").val() === '') {
+    getValidationError('#type-message');
+    return;
+  }
+  if ($('#ddlModule-update option:selected').val() === '(Select Module)') {
+        getValidationError('#type-update-message');
+        return;
+  }
+  $("#type-update input[name='module']").val($('#ddlModule-update option:selected').attr("id"));
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+    if ($("#chkbx-type-status").is(":checked"))
+        $("#type-update input[name='status']").val(0);
+    else
+        $("#type-update input[name='status']").val(1);
+    var data = $('#type-update').serialize();
+    $.ajax({
+        url: uri + "type/update",
+        type: "POST",
+        data: data,
+        success: function (res) {
+            if (res.error)
+            {
+                $('#type-update-message').html(function createMessage(){
+                    var message = "";
+                    message = "<div class=\"alert alert-danger\"><big name=\"result\">" + 
+                    "<b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    return message;
+                });
+                return;
+            } else {
+                $('#type-update-message').html(function createMessage(){
+                var message = "<div class=\"alert alert-success\">" +
+                    "<big name=\"result\">Type updated! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                return message;
+                });
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#type-update-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });;
+});
+//TYPE MAINTENANCE
 
 function setToMMDDYYYY(date) 
 {
@@ -946,6 +1449,11 @@ function setToHHMMSS(date) {
         mm = date.getSeconds();
     return hh + ':' + mm + ':' + ss;
 }
+
+$('#dateOfBirth-user-create').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
 
 $('#dateOfBirth-applicant-create').datetimepicker({
     viewMode: 'months',
@@ -1015,3 +1523,7 @@ $("#button-export-deployment").click(function (e) {
 //INITIALIZE DATA TABLE MODULE
 $('#table-applicant-results').DataTable();
 $('#table-user-results').DataTable();
+$('#table-center-results').DataTable();
+$('#table-country-results').DataTable();
+$('#table-tieup-results').DataTable();
+$('#table-type-results').DataTable();

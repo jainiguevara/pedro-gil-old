@@ -1,3 +1,8 @@
+<div class="col-lg-12">
+    <div class="col-lg-4">
+        <button id="button-export-deployment" class="btn btn-success">Download</button>
+    </div>  
+</div>
 <div id="export-report-deployment" class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Deployment Report</h1>
@@ -23,26 +28,32 @@
                         <th>Principal</th>
                         <th>Employer</th>
                         <th>Country</th>
-                        <th>Payments</th>
+                        <th>Collections</th>
                         <th>Expenses</th>
                         <th>Difference</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% if (typeof report !== 'undefined') {
+                        var totalApplicants = 0, totalPayments = 0, totalExpenses = 0;
                         for (var i=0; i < report.length; i++) { 
                         if (typeof report[i].referenceNo !== 'undefined') {
-                            var payments = 0, expenses = 0; 
+                            totalApplicants++;
+                            var payments = 0, expenses = 0, difference = 0; 
                             for (var p in report[i].payments) {
                                 if (typeof report[i].payments[p].amount !== 'undefined') {
                                     payments += report[i].payments[p].amount;
+                                   
                                 }
                             } 
                             for (var e in report[i].expenses) { 
                                 if (typeof report[i].expenses[e].amount !== 'undefined') {
-                                  expenses += report[i].expenses[e].amount;
+                                      expenses += report[i].expenses[e].amount;
+                                      
                                 }
-                            } %>
+                            } 
+                            difference = payments - expenses;
+                            %>
                             <tr>
                               <td><%= report[i].date %></td>
                               <td><%= report[i].referenceNo %></td>
@@ -55,10 +66,12 @@
                               <td><%= report[i].principal %></td>
                               <td><%= report[i].employer %></td>
                               <td><%= report[i].country %></td>
-                              <td><%= addCommas(payments) %></td>
-                              <td><%= addCommas(expenses) %></td>
-                              <td><%= addCommas(payments - expenses) %></td>
-                              <% payments = 0; expenses = 0; %>
+                              <td><%= addCommas(parseFloat(Math.round(payments * 100) / 100).toFixed(2)) %></td>
+                              <td><%= addCommas(parseFloat(Math.round(expenses * 100) / 100).toFixed(2)) %></td>
+                              <td><%= addCommas(parseFloat(Math.round(difference * 100) / 100).toFixed(2)) %></td>
+                              <%  totalPayments += payments; totalExpenses += expenses; payments = 0; expenses = 0;
+                                  var totalDiff = totalPayments - totalExpenses;
+                              %>
                             </tr>
                         <% }
                         }
@@ -67,12 +80,28 @@
             </table>
         </div>
     </div>
-</div>
-<div class="row">
     <div class="col-lg-4">
-        <button id="button-export-deployment" class="btn btn-success">Download</button>
-        <button onClick="window.print()" class="btn btn-info">Print</button>
-    </div>    
+        <table style="font-size: 80%;" id="table-report-deployment" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                <tbody>
+                    <tr>    
+                        <td>Total Deployed Applicants</td>
+                        <td><%=addCommas(totalApplicants)%></td>
+                    </tr>
+                    <tr>    
+                        <td>Total Collections</td>
+                        <td><%=addCommas(parseFloat(Math.round(totalPayments * 100) / 100).toFixed(2))%></td>
+                    </tr>
+                    <tr>    
+                        <td>Total Expenses</td>
+                        <td><%=addCommas(parseFloat(Math.round(totalExpenses * 100) / 100).toFixed(2))%></td>
+                    </tr>;
+                    <tr>    
+                        <td>Total Difference</td>
+                        <td><%=addCommas(parseFloat(Math.round(totalDiff * 100) / 100).toFixed(2))%></td>
+                    </tr>
+                </tbody>
+        </table>
+    </div>
 </div>
 
 <%
