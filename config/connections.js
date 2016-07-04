@@ -69,6 +69,24 @@ module.exports.connections = {
     password: '!!!P%40ssw0rd!!!',
     database: 'humania'
   },
+  
+  /***************************************************************************
+  *                                                                          *
+  * DynamoDB .                                                               *
+  * A Waterline adapter for DynamoDB. May be used in a Sails app or anything * 
+  * using Waterline for the ORM.                                             *
+  *                                                                          *
+  * Run: npm install sails-dynamodb --save                                   *
+  *                                                                          *
+  // ***************************************************************************/
+  
+  dynamoDb: {
+    adapter: "sails-dynamodb",
+    accessKeyId: process.env.DYNAMO_ACCESS_KEY_ID,
+    secretAccessKey: process.env.DYNAMO_SECRET_ACCESS_KEY,
+    region: "us-west-1",
+    endPoint: "http://localhost:8000", // Optional: add for DynamoDB local
+  },
 
   /***************************************************************************
   *                                                                          *

@@ -29,7 +29,7 @@ module.exports = {
   
   get: function(req, res) {
     try {
-      TieUp.find({ status : 1 }).exec(function recordFound(err, result){
+      TieUp.find({ status : 1 }).sort('name ASC').exec(function recordFound(err, result){
         if (err) { console.log(err); return res.json(err); }
         console.log('Found tie-up/s: ' + JSON.stringify(result));
         return res.jsonp(result);

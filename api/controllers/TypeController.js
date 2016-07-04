@@ -30,7 +30,7 @@ module.exports = {
   get: function(req, res) {
     try {
       //console.log(req.param('module'));
-      Type.find({ module : req.param('module'), status : 1 }).exec(function recordFound(err, result){
+      Type.find({ module : req.param('module'), status : 1 }).sort('description ASC').exec(function recordFound(err, result){
         if (err) { console.log(err); return res.json(err); }
         //console.log('Found type/s: ' + JSON.stringify(result));
         return res.jsonp(result);

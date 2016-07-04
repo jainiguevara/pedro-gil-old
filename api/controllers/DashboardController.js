@@ -15,7 +15,7 @@ module.exports = {
 		    //APPLICANT
 		    //Initialize
 		    var tieUps = '';
-		    TieUp.find({status : 1}).exec(function (err, results) {
+		    TieUp.find({status : 1}).sort('name ASC').exec(function (err, results) {
 		    	 var ddlTieUp = results.map(function(a) {
 		    		return { 
 		    			id : a.id, 
