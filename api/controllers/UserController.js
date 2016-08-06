@@ -52,6 +52,7 @@ module.exports = {
 							firstName : user.firstName, 
 							role : user.role,
 							message: { status : 200, value : '' } };
+				//console.log(me);
 				req.session.me = me;
 				return res.redirect('dashboard');
 			},

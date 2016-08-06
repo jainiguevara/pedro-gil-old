@@ -1423,7 +1423,7 @@ function setToMMDDYYYY(date)
     else {
         var date = new Date(date),
             yr = date.getFullYear(),
-            month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+            month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
             day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
         return month + '-' + day + '-' + yr;
     }

@@ -34,7 +34,7 @@ module.exports = {
         dateDeployed : req.body.dateDeployed,
         oec : req.body.oec,
         pdos : req.body.pdos,
-        cg : req.body.pdos,
+        cg : req.body.cg,
         employer : req.body.employer,
         principal : req.body.principal,
         state : 1, 

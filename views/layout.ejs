@@ -124,6 +124,16 @@
                             </div>
                     </div>
                     <div class="form-group">
+                        <label>Country</label>
+                        <select name="country" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="">ALL</option>
+                            <% for (var i=0; i < ddlCountry.length; i++) { %>
+                                 <option><%= ddlCountry[i].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Principal (Tie-Up)</label>
                         <select id="report-expense-ddl-principal" name="principal" class="form-control">
                             <!-- CREATE LOGIC HERE -->
@@ -192,6 +202,26 @@
                             </div>
                     </div>
                     <div class="form-group">
+                        <label>Country</label>
+                        <select name="country" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="">ALL</option>
+                            <% for (var i=0; i < ddlCountry.length; i++) { %>
+                                 <option><%= ddlCountry[i].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Principal (Tie-Up)</label>
+                        <select id="report-expense-ddl-principal" name="principal" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="">ALL</option>
+                            <% for (var i=0; i < ddlTieUp.length; i++) { %>
+                                 <option id="<%= ddlTieUp[i].id %>"><%= ddlTieUp[i].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Transaction Type</label>
                         <select id="report-collection-ddl-type" name="type" class="form-control">
                             <!-- CREATE LOGIC HERE -->
@@ -221,7 +251,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="label-report-payment">Deployments Report</h4>
+            <h4 class="modal-title" id="label-report-deployment">Deployments Report</h4>
           </div>
           <div class="modal-body">
                 <form id="form-report-deployment" action="report/deployment" target="_blank">
@@ -253,15 +283,13 @@
                         <label>Country</label>
                         <select name="country" class="form-control">
                             <!-- CREATE LOGIC HERE -->
-                            <option>ALL</option>
-                            <option>Hong Kong</option>
-                            <option>Oman</option>
-                            <option>Qatar</option>
-                            <option>Kuwait</option>
+                            <% for (var i=0; i < ddlCountry.length; i++) { %>
+                                 <option><%= ddlCountry[i].name %></option>
+                            <% } %>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Principal</label>
+                        <label>Principal (Tie-Up)</label>
                         <select id="report-deployment-ddl-principal" name="principal" class="form-control">
                             <!-- CREATE LOGIC HERE -->
                             <option id="">ALL</option>

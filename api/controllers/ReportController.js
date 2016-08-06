@@ -38,7 +38,7 @@ module.exports = {
             //console.log(results);
             if (err) { console.log(err); return res.json(err); }
     		    var report = results.map(function(a) {
-    		          if (req.param('principal') === "ALL")
+    		          if (req.param('principal') === "ALL" && req.param('country') === "ALL")
       		    			return { 
       		    			    date : setToMMDDYYYY(a.transactionDate), 
       		    			    referenceNo : a.owner.referenceNo,
@@ -46,18 +46,20 @@ module.exports = {
       		    			    type : a.type, 
       		    			    actualCost : a.actualCost,
       		    			    amount : a.amount,
+      		    			    country : a.owner.country,
       		    			    principal : a.owner.principal,
       		    			    employer : a.owner.employer
       		    			};
       		    		else { 
       		    		  var filtered = {};
-      		    		  if (a.owner.principal === req.param('principal')) { 
+      		    		  if (a.owner.principal === req.param('principal') | a.owner.country === req.param('country')) { 
         		    			  filtered = { date : setToMMDDYYYY(a.transactionDate), 
         		    			  referenceNo : a.owner.referenceNo,
         		    			  name : a.owner.firstName + ' ' + a.owner.lastName, 
         		    			  type : a.type, 
-        		    			  actualCost : addCommas(a.actualCost),
-        		    			  amount : addCommas(a.amount),
+        		    			  actualCost : a.actualCost,
+        		    			  amount : a.amount,
+        		    			  country : a.owner.country,
         		    			  principal : a.owner.principal,
         		    			  employer : a.owner.employer };
       		    		  } 
@@ -81,7 +83,7 @@ module.exports = {
 	collection: function(req, res) {
 	    if (typeof req.session.me === 'undefined') { req.session.me = undefined; return res.redirect('/'); };
 	    res.locals.layout = "layout-report";
-		  res.locals.title = "Payments Report";
+		  res.locals.title = "Collections Report";
 	    var endDate = new Date(req.param('end'));
       endDate.setDate(endDate.getDate() + 1);
       var dailyParam = new Date(req.param('start'));
@@ -108,13 +110,33 @@ module.exports = {
           console.log(results);
           if (err) { console.log(err); return res.json(err); }
     	    var report = results.map(function(a) {
+    	      if (req.param('principal') === "ALL" && req.param('country') === "ALL")
       	    		return { 
       	    		    date : setToMMDDYYYY(a.transactionDate), 
       	    		    referenceNo : a.owner.referenceNo,
       	    		    name : a.owner.firstName + ' ' + a.owner.lastName, 
       	    		    type : a.type, 
-      	    		    amount : a.amount
+      	    		    amount : a.amount,
+      	    		    country : a.owner.country,
+        		    	  principal : a.owner.principal,
+        		    		employer : a.owner.employer
       	    		};
+      	    else
+      	    {
+      	      var filtered = {};
+      		    		  if (a.owner.principal === req.param('principal') | a.owner.country === req.param('country')) { 
+        		    			  filtered = { date : setToMMDDYYYY(a.transactionDate), 
+        		    			  referenceNo : a.owner.referenceNo,
+        		    			  name : a.owner.firstName + ' ' + a.owner.lastName, 
+        		    			  type : a.type, 
+        		    			  actualCost : a.actualCost,
+        		    			  amount : a.amount,
+        		    			  country : a.owner.country,
+        		    			  principal : a.owner.principal,
+        		    			  employer : a.owner.employer };
+      		    		  } 
+      		    return filtered;
+      	    }
     	    });
     	    //console.log('Payment/s found: ' + JSON.stringify(report));
     	    var paymentResults = {
@@ -218,7 +240,7 @@ function setToMMDDYYYY(date)
     else {
         var date = new Date(date),
             yr = date.getFullYear(),
-            month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+            month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
             day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
         return month + '-' + day + '-' + yr;
     }
@@ -236,4 +258,3 @@ function addCommas(nStr)
 	}
 	return x1 + x2;
 }
-
