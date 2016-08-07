@@ -243,7 +243,9 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard-col2 p[name='country']").text(res.country);
                         $("#applicant-indexCard-col2 input[name='id']").val(res.id);
                         $("#applicant-transaction-create input[name='owner']").val(res.id);
-                        if (res.dateDeployed === undefined & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
+                        if (res.dateDeployed === undefined & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer" |
+                        ($("#applicant-indexCard-col2 input[name='role']").val() === "su" |
+                            $("#applicant-indexCard-col2 input[name='role']").val() === "admin")) {
                             $("#cont-deployment").html(
                                 "<label>Deployment Date <i class=\"fa fa-check\"></i></label>" + 
                                 "<div class='input-group date' id='deploymentDate-applicant-view'>" +
@@ -259,6 +261,8 @@ function loadApplicantData(arr) {
                                 viewMode: 'months',
                                 format: 'MM/DD/YYYY'
                             });
+                            if (res.dateDeployed !== undefined)
+                                $("#applicant-indexCard-col2 input[name='dateDeployed']").val(setToMMDDYYYY(res.dateDeployed));
                         }
                         else {
                             $("#cont-deployment").html("<label>Deployment Date <i class=\"fa fa-check\"></i></label><p name=\"dateDeployed\" class=\"form-control-static\">" + setToMMDDYYYY(res.dateDeployed) + "</p>");
