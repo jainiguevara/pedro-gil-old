@@ -31,6 +31,7 @@
                     <% if (typeof report !== 'undefined') {
                         var totalPayments = 0;
                         for (var i=0; i < report.length; i++) { 
+                            if (typeof report[i] !== 'undefined') {
                             if (typeof report[i].referenceNo !== 'undefined' & typeof report[i].amount !== 'undefined') { %>
                                 <tr>
                                   <td><%= report[i].date %></td>
@@ -43,6 +44,7 @@
                                   <td><%= report[i].employer %></td>
                                 </tr>
                                 <% totalPayments += report[i].amount;
+                            }
                             }
                         }
                     }%>

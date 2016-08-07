@@ -38,6 +38,7 @@ module.exports = {
             //console.log(results);
             if (err) { console.log(err); return res.json(err); }
     		    var report = results.map(function(a) {
+    		      if (typeof a.owner !== 'undefined') {
     		          if (req.param('principal') === "ALL" && req.param('country') === "ALL")
       		    			return { 
       		    			    date : setToMMDDYYYY(a.transactionDate), 
@@ -65,6 +66,7 @@ module.exports = {
       		    		  } 
       		    		  return filtered;
       		    		}
+    		      }
     		    		});
     		    //console.log('Payment/s found: ' + JSON.stringify(report));
     		    var collectionResults = {
@@ -75,7 +77,7 @@ module.exports = {
     		      }, 
     		      report : report  
     		    };
-    		    console.log(report);
+    		    //console.log(report);
             return res.view('private/expense', collectionResults);
           });
         } catch (e) { console.log(e); return res.json(e); }
@@ -107,36 +109,38 @@ module.exports = {
         .sort('transactionDate')
         .sort('owner')
         .exec(function afterwards(err, results){
-          console.log(results);
+          //console.log(results);
           if (err) { console.log(err); return res.json(err); }
     	    var report = results.map(function(a) {
-    	      if (req.param('principal') === "ALL" && req.param('country') === "ALL")
-      	    		return { 
-      	    		    date : setToMMDDYYYY(a.transactionDate), 
-      	    		    referenceNo : a.owner.referenceNo,
-      	    		    name : a.owner.firstName + ' ' + a.owner.lastName, 
-      	    		    type : a.type, 
-      	    		    amount : a.amount,
-      	    		    country : a.owner.country,
-        		    	  principal : a.owner.principal,
-        		    		employer : a.owner.employer
-      	    		};
-      	    else
-      	    {
-      	      var filtered = {};
-      		    		  if (a.owner.principal === req.param('principal') | a.owner.country === req.param('country')) { 
-        		    			  filtered = { date : setToMMDDYYYY(a.transactionDate), 
-        		    			  referenceNo : a.owner.referenceNo,
-        		    			  name : a.owner.firstName + ' ' + a.owner.lastName, 
-        		    			  type : a.type, 
-        		    			  actualCost : a.actualCost,
-        		    			  amount : a.amount,
-        		    			  country : a.owner.country,
-        		    			  principal : a.owner.principal,
-        		    			  employer : a.owner.employer };
-      		    		  } 
-      		    return filtered;
-      	    }
+    	      if (typeof a.owner !== 'undefined') {
+      	      if (req.param('principal') === "ALL" && req.param('country') === "ALL")
+        	    		return { 
+        	    		    date : setToMMDDYYYY(a.transactionDate), 
+        	    		    referenceNo : a.owner.referenceNo,
+        	    		    name : a.owner.firstName + ' ' + a.owner.lastName, 
+        	    		    type : a.type, 
+        	    		    amount : a.amount,
+        	    		    country : a.owner.country,
+          		    	  principal : a.owner.principal,
+          		    		employer : a.owner.employer
+        	    		};
+        	    else
+        	    {
+        	      var filtered = {};
+        		    		  if (a.owner.principal === req.param('principal') | a.owner.country === req.param('country')) { 
+          		    			  filtered = { date : setToMMDDYYYY(a.transactionDate), 
+          		    			  referenceNo : a.owner.referenceNo,
+          		    			  name : a.owner.firstName + ' ' + a.owner.lastName, 
+          		    			  type : a.type, 
+          		    			  actualCost : a.actualCost,
+          		    			  amount : a.amount,
+          		    			  country : a.owner.country,
+          		    			  principal : a.owner.principal,
+          		    			  employer : a.owner.employer };
+        		    		  } 
+        		    return filtered;
+        	    }
+    	      }
     	    });
     	    //console.log('Payment/s found: ' + JSON.stringify(report));
     	    var paymentResults = {
@@ -147,7 +151,7 @@ module.exports = {
     	      }, 
     	      report : report  
     	    };
-    	    console.log(report);
+    	    //console.log(report);
           return res.view('private/collection', paymentResults);
         });
       } catch (e) { console.log(e); return res.serverError(e); }

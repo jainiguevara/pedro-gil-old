@@ -32,20 +32,22 @@
                     <% if (typeof report !== 'undefined') {
                         var totalExpenses = 0;
                         for (var i=0; i < report.length; i++) { 
-                            if (typeof report[i].referenceNo !== 'undefined' & typeof report[i].amount !== 'undefined' 
-                            & typeof report[i].principal !== 'undefined') { %>
-                                <tr>
-                                  <td><%= report[i].date %></td>
-                                  <td><%= report[i].referenceNo %></td>
-                                  <td><%= report[i].name %></td>
-                                  <td><%= report[i].type %></td>
-                                  <!--<td><%= report[i].actualCost %></td>-->
-                                  <td><%= addCommas(parseFloat(Math.round(report[i].amount * 100) / 100).toFixed(2)) %></td>
-                                  <td><%= report[i].country %></td>
-                                  <td><%= report[i].principal %></td>
-                                  <td><%= report[i].employer %></td>
-                                </tr> 
-                                <% totalExpenses += report[i].amount;
+                            if (typeof report[i] !== 'undefined') {
+                                if (typeof report[i].referenceNo !== 'undefined' & typeof report[i].amount !== 'undefined' 
+                                & typeof report[i].principal !== 'undefined') { %>
+                                    <tr>
+                                      <td><%= report[i].date %></td>
+                                      <td><%= report[i].referenceNo %></td>
+                                      <td><%= report[i].name %></td>
+                                      <td><%= report[i].type %></td>
+                                      <!--<td><%= report[i].actualCost %></td>-->
+                                      <td><%= addCommas(parseFloat(Math.round(report[i].amount * 100) / 100).toFixed(2)) %></td>
+                                      <td><%= report[i].country %></td>
+                                      <td><%= report[i].principal %></td>
+                                      <td><%= report[i].employer %></td>
+                                    </tr> 
+                                    <% totalExpenses += report[i].amount;
+                                }
                             }
                         }
                     }%>
