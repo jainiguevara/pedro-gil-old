@@ -40,9 +40,9 @@ module.exports.policies = {
 		marshallHomepage: true
 	},
 	
-	// CommandController: {
-	// 	'*': true //DISABLE THIS IS PRODUCTION
-	// }
+	//CommandController: {
+	//	'*': true //DISABLE THIS IS PRODUCTION
+	//}
 
   /***************************************************************************
   *                                                                          *

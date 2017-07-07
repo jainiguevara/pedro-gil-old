@@ -29,8 +29,7 @@ module.exports = {
   
   get: function(req, res) {
     try {
-      //console.log(req.param('module'));
-      Center.find({ module : req.param('type'), status : 1 }).exec(function recordFound(err, result){
+      Center.find({ subType : req.param('subType'), status : 1 }).exec(function recordFound(err, result){
         if (err) { console.log(err); return res.json(err); }
         //console.log('Found type/s: ' + JSON.stringify(result));
         return res.jsonp(result);

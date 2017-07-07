@@ -46,6 +46,7 @@ module.exports.routes = {
   /* REPORTS */
   'get /report/expense' : 'ReportController.expense',
   'get /report/collection' : 'ReportController.collection',
+  'get /report/collectibles' : 'ReportController.collectibles',
   'get /report/deployment' : 'ReportController.deployment',
   'get /report/ledger' : 'ReportController.ledger',
   
@@ -73,6 +74,9 @@ module.exports.routes = {
   //Expense
   'post /expense/create' : 'ExpenseController.create',
   'post /expense/update' : 'ExpenseController.update',
+  //Collectible
+  'post /collectible/create' : 'CollectibleController.create',
+  'post /collectible/update' : 'CollectibleController.update',
   //Service Fee
   'post /servicefee/create' : 'ServiceFeeController.create',
   'post /servicefee/update' : 'ServiceFeeController.update',
@@ -119,6 +123,10 @@ module.exports.routes = {
   'get /expense' : '/',
   'get /expense/create' : '/',
   'get /expense/update' : '/',
+  //Collectible
+  'get /collectible' : '/',
+  'get /collectible/create' : '/',
+  'get /collectible/update' : '/',
   //Service Fee
   'get /servicefee' : '/',
   'get /servicefee/create' : '/',
@@ -127,7 +135,6 @@ module.exports.routes = {
   'get /type' : '/',
   'get /type/create' : '/',
   'get /type/update' : '/',
-
   //Tie-Up
   'get /tieup' : '/',
   'get /tieup/create' : '/',

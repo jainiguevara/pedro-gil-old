@@ -30,10 +30,10 @@ function fillTransactionsTable(res, role) {
                 "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
             }
             value = value + "<td>Payment</td>";
-            if (result.type !== 'Rebate')
-                value = value + "<td>" + result.type + "</td>";
-            else 
+            if (result.type == 'Rebate' | result.type == 'Insurance')
                 value = value + "<td>" + result.type + " (" + result.center +  ")</td>";
+            else
+                value = value + "<td>" + result.type + "</td>";
             value = value + "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
             // "<td>N/A</td>" +
             "<td>" + addCommas(result.amount) + "</td>" +
@@ -74,6 +74,26 @@ function fillTransactionsTable(res, role) {
         //     "</tr>";
         //     totalServiceFee = totalServiceFee + result.amount;
         // });
+        $.each(res.collectibles, function(d, result) {
+            value = value + "<tr>";
+            if (role == "su" | role == "admin") {
+                value = value +
+                "<td><a name='" + result.id + ":Payment:" + result.type + ":" + setToMMDDYYYY(result.transactionDate) + ":" + 
+                result.amount + ":" + result.owner +
+                "' href='#' data-toggle='modal' data-target='#transaction-update'><i class='fa fa-pencil-square-o'></i></a></td>";
+            }
+            value = value + "<td>Collectibles</td>";
+            if (result.type == 'Rebate' | result.type == 'Insurance')
+                value = value + "<td>" + result.type + " (" + result.center +  ")</td>";
+            else
+                value = value + "<td>" + result.type + "</td>";
+            value = value + "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
+            // "<td>N/A</td>" +
+            "<td>" + addCommas(result.amount) + "</td>" +
+            "<td>" + result.createdBy + "</td>" +
+            "</tr>";
+            totalPayment = totalPayment + result.amount;
+        });
         value = value + "</tbody>" +
                             "</table>";
         return value;
@@ -277,7 +297,8 @@ function loadApplicantData(arr) {
                             $("#ddl-transaction").html(
                                 "<option>(Select Transaction)</option>" +
                                 "<option id=\"1\">Payment</option>" +
-                                "<option id=\"2\">Expense</option>"
+                                "<option id=\"2\">Expense</option>" +
+                                "<option id=\"4\">Collectible</option>"
                                 );
                         } else {
                             if ($("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
@@ -300,7 +321,8 @@ function loadApplicantData(arr) {
                                     $("#ddl-transaction").html(
                                     "<option>(Select Transaction)</option>" +
                                     "<option id=\"1\">Payment</option>" +
-                                    "<option id=\"2\">Expense</option>"
+                                    "<option id=\"2\">Expense</option>" +
+                                    "<option id=\"4\">Collectible</option>"
                                     );
                             }});
                             } else {
@@ -355,14 +377,15 @@ $('#applicant-create').on("submit", function(event) {
             {  
                 $('#applicant-create-message').html(function createMessage(){
                     var message = "";
-                    if (res.invalidAttributes.passportNo[0].rule === 'unique')
-                        message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.passportNo[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    if (res.error === 'active')
+                        message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
                     else
                         message = message + "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
                     return message;
                 });
                 return;
             } else {
+                alert(JSON.stringify(res));
                 $('#applicant-create-message').html(function createMessage(){
                 var message = "<div class=\"alert alert-success\">" +
                     "<big name=\"result\">Applicant created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
@@ -474,7 +497,7 @@ $('#ddl-transaction').change(function(event) {
   var module = $('#ddl-transaction option:selected').attr("id");
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
     $.ajax({
-        url: uri + "type/get?module=" + module,
+        url: uri + "type/get?module=" + (module == 4 ? 1 : module),
         type: "GET",
         dataType: "jsonp",
         //data: type,
@@ -511,14 +534,14 @@ $('#ddl-transaction').change(function(event) {
 
 $('#ddl-transaction-type').change(function(event) {
   event.preventDefault();
-  var type = $('#ddl-transaction-type option:selected').val();
+  var subType = $('#ddl-transaction-type option:selected').val();
   
   //REBATE REFERENCE
-  if (type === "Rebate")
+  if (subType === "Rebate" | subType === "Insurance")
   {
-         waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+        waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
         $.ajax({
-            url: uri + "center/get",
+            url: uri + "center/get?subType=" + subType,
             type: "GET",
             dataType: "jsonp",
             //data: type,
@@ -533,11 +556,19 @@ $('#ddl-transaction-type').change(function(event) {
                     return;
                 } else {
                     //POPULATE CENTER
-                    $('#cont-transaction-center').html(
-                      "<label>Medical/Training Center</i></label>" +
-                                        "<select id='ddl-center' name='center' class='form-control'>" +
-                                            "<option>(Select Center)</option>"
-                    );
+                    if (subType === "Rebate") {
+                        $('#cont-transaction-center').html(
+                          "<label>Medical/Training Center</i></label>" +
+                                            "<select id='ddl-center' name='center' class='form-control'>" +
+                                                "<option>(Select Center)</option>"
+                        );
+                    } else if (subType === "Insurance") {
+                        $('#cont-transaction-center').html(
+                          "<label>Insurance Center</i></label>" +
+                                            "<select id='ddl-center' name='center' class='form-control'>" +
+                                                "<option>(Select Center)</option>"
+                        );
+                    }
                     $.each(res, function(d, result){
                         $("#ddl-center").append("<option>" + result.name + "</option>");
                     });
@@ -559,7 +590,7 @@ $('#ddl-transaction-type').change(function(event) {
 $('#applicant-transaction-create').on("submit", function(event) {
   event.preventDefault();
   
-  var command = ["payment/create", "expense/create", "servicefee/create"];
+  var command = ["payment/create", "expense/create", "servicefee/create", "collectible/create"];
    var module = $('#ddl-transaction option:selected').attr("id");
    var data = $('#applicant-transaction-create').serialize();
    
@@ -1495,6 +1526,16 @@ $('#report-collection-start').datetimepicker({
 });
 
 $('#report-collection-end').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
+$('#report-collectibles-start').datetimepicker({
+    viewMode: 'months',
+    format: 'MM/DD/YYYY'
+});
+
+$('#report-collectibles-end').datetimepicker({
     viewMode: 'months',
     format: 'MM/DD/YYYY'
 });

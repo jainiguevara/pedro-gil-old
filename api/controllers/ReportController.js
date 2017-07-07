@@ -234,7 +234,81 @@ module.exports = {
           return res.view('private/ledger', { report: results });
         });
       } catch (e) { console.log(e); return res.json(e); }
-	}
+	},
+	collectibles: function(req, res) {
+	    if (typeof req.session.me === 'undefined') { req.session.me = undefined; return res.redirect('/'); };
+	    res.locals.layout = "layout-report";
+		  res.locals.title = "Collectibles Report";
+	    var endDate = new Date(req.param('end'));
+      endDate.setDate(endDate.getDate() + 1);
+      var dailyParam = new Date(req.param('start'));
+      dailyParam.setDate(dailyParam.getDate() + 1)
+      var dateParam = { '>=': req.param('start'), '<': endDate },
+      params = {
+          status : 1,
+          transactionDate: dateParam
+      };
+      if (req.param('type') !== 'ALL')
+        params = {
+          status : 1,
+          transactionDate: dateParam,
+          type: req.param('type')
+        };
+      console.log('Report Parameters:');
+      console.log(params);
+      try {
+        Collectible.find(params)
+        .populate('owner', { where: { status: 1 } })
+        .sort('transactionDate')
+        .sort('owner')
+        .exec(function afterwards(err, results){
+          //console.log(results);
+          if (err) { console.log(err); return res.json(err); }
+    	    var report = results.map(function(a) {
+    	      if (typeof a.owner !== 'undefined') {
+      	      if (req.param('principal') === "ALL" && req.param('country') === "ALL")
+        	    		return { 
+        	    		    date : setToMMDDYYYY(a.transactionDate), 
+        	    		    referenceNo : a.owner.referenceNo,
+        	    		    name : a.owner.firstName + ' ' + a.owner.lastName, 
+        	    		    type : a.type, 
+        	    		    amount : a.amount,
+        	    		    country : a.owner.country,
+          		    	  principal : a.owner.principal,
+          		    		employer : a.owner.employer
+        	    		};
+        	    else
+        	    {
+        	      var filtered = {};
+        		    		  if (a.owner.principal === req.param('principal') | a.owner.country === req.param('country')) { 
+          		    			  filtered = { date : setToMMDDYYYY(a.transactionDate), 
+          		    			  referenceNo : a.owner.referenceNo,
+          		    			  name : a.owner.firstName + ' ' + a.owner.lastName, 
+          		    			  type : a.type, 
+          		    			  actualCost : a.actualCost,
+          		    			  amount : a.amount,
+          		    			  country : a.owner.country,
+          		    			  principal : a.owner.principal,
+          		    			  employer : a.owner.employer };
+        		    		  } 
+        		    return filtered;
+        	    }
+    	      }
+    	    });
+    	    //console.log('Payment/s found: ' + JSON.stringify(report));
+    	    var collectiblesResults = {
+    	      headers : {
+    	        start : req.param('start'),
+    	        end : req.param('end'),
+    	        me : req.session.me 
+    	      }, 
+    	      report : report  
+    	    };
+    	    //console.log(report);
+          return res.view('private/collectibles', collectiblesResults);
+        });
+      } catch (e) { console.log(e); return res.serverError(e); }
+	},
 };
 
 function setToMMDDYYYY(date) 

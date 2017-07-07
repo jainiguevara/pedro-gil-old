@@ -27,6 +27,7 @@ module.exports = {
 		    			return { 
 		    				id : a.id,
 		    				referenceNo : a.referenceNo,
+		    				dateDeployed : a.dateDeployed,
 		    				firstName : a.firstName, 
 		    				lastName: a.lastName, 
 		    				dateOfBirth : a.dateOfBirth,

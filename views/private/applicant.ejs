@@ -151,6 +151,8 @@
                                             View
                                         </th>
                                         <th>Reference No.</th>
+                                        <th>Status</th>
+                                        <th>Date Deployed</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Birthdate</th>
@@ -168,6 +170,27 @@
                                                 <a name="view:<%=applicants[i].id%>:<%=me.role%>" href='#tab-applicant-indexCard' role='tab' data-toggle='tab'><i class='fa fa-folder-open'></i></i></a>
                                             </td>
                                           <td><%=applicants[i].referenceNo %></td>
+                                          <td>
+                                            <% if (applicants[i].dateDeployed === undefined) { %>
+                                            NEW
+                                            <% } else { %>
+                                            DEPLOYED
+                                            <% } %>
+                                          </td>
+                                          <td>
+                                              <%
+                                              if (applicants[i].dateDeployed !== undefined) {
+                                              var date    = new Date(applicants[i].dateDeployed),
+                                                    yr      = date.getFullYear(),
+                                                    month   = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+                                                    day     = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
+                                                    newDate = month + '-' + day + '-' + yr;
+                                              %>
+                                              <%=newDate%>
+                                              <% } else { %>
+                                              N/A
+                                              <% } %>
+                                          </td>
                                           <td><%=applicants[i].firstName %></td>
                                           <td><%=applicants[i].lastName %></td>
                                           <td>
@@ -457,7 +480,7 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                        <label>Reference No.  <i class="fa fa-check"></i></label>
-                       <input name="referenceNo" class="form-control" placeholder="Reference No.">
+                       <input name="referenceNo" class="form-control" placeholder="Reference No." readonly>
                     </div>
                     <div class="form-group">
                         <label>First Name <i class="fa fa-check"></i></label>

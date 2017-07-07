@@ -7,13 +7,30 @@
 
 module.exports = {
   create: function (req, res) {
-    try {
-      Applicant.create(req.body).exec(function applicantSaved(err, created)
-      {
-        if (err) { console.log(err); return res.json(err); }
-        console.log('Created applicant: ' + JSON.stringify(created));
-        return res.json(created);
+    try { 
+       //SEARCH BY ID, STATUS = 1 AND STATE = 0 (NOT YET DEPLOYED)
+        //Object: Applicant 
+        Applicant.findOne({ passportNo: req.body.passportNo, status : 1, state : 0 })
+        .exec(function (err, results) {
+          console.log(results);
+            if (err) { console.log(err); return res.json(err); }
+            if (results == undefined) {
+              //Create new applicant if no record found
+              Applicant.create(req.body).exec(function applicantSaved(err, created)
+              {
+                if (err) { console.log(err); return res.json(err); }
+                console.log('Created applicant: ' + JSON.stringify(created));
+                return res.json(created);
+              });
+            } else 
+            {
+              var msg = { error : 'active', message : 'Cannot create new record. Data for passport no. ' + results.passportNo + ' not yet deployed.' }
+              console.log(msg);
+              return res.json(msg);
+            }
+            //return res.jsonp(results);
       });
+      
     } catch (e) { console.log(e); return res.json(e); }
   },
   
@@ -21,7 +38,7 @@ module.exports = {
     try {
       Applicant.update(req.body.id, req.body).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Updated applicant: ' + JSON.stringify(updated));
+        console.log('Updated applicant by admin (' + req.body.updatedBy + '): ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
@@ -41,7 +58,7 @@ module.exports = {
         updatedBy : req.body.updatedBy
       }).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
-        console.log('Updated applicant: ' + JSON.stringify(updated));
+        console.log('Updated applicant via index card: ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }
@@ -56,7 +73,8 @@ module.exports = {
         Applicant.findOne({ id: req.param('id'), status : 1 })
                 .populate('expenses', { where: { status: 1 } } )
                 .populate('payments', { where: { status: 1 } })
-                .populate('servicefees', { where: { status: 1 } })
+                //.populate('servicefees', { where: { status: 1 } })
+                .populate('collectibles', { where: { status: 1 } })
         .exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
             //console.log(req.url + " results: " + JSON.stringify(results));

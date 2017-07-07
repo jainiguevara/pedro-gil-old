@@ -32,7 +32,7 @@ module.exports = {
     passportNo : { 
       type: 'string', 
       required: true,
-      unique: true
+      unique: false
     },
     
     oec : { 
@@ -60,7 +60,7 @@ module.exports = {
     
     state : {
       type: 'integer',
-      enum: [0, 1],
+      enum: [0, 1], //0 - in progress, 1 - deployed
       defaultsTo : 0,
       required: true
     },
@@ -103,14 +103,26 @@ module.exports = {
     servicefees: {
       collection: 'servicefee',
       via: 'owner'
+    },
+    
+    collectibles: {
+      collection: 'collectible',
+      via: 'owner'
     }
   },
   
   beforeCreate: function (values, cb) {
     try {
-            var date = sails.config.globals.phDate;
-    console.log(values.firstName.substring(0,1) + values.lastName.substring(0,1) + values.passportNo);
-    var refNo = values.firstName.substring(0,1) + values.lastName.substring(0,1) + values.passportNo;
+    var date = sails.config.globals.phDate;
+    var refNo = values.firstName.substring(0,1) + 
+                values.lastName.substring(0,1) + 
+                values.passportNo + 
+                date.getMonth() + 
+                date.getDay() + 
+                date.getYear() +
+                date.getHours() +
+                date.getMinutes() +
+    console.log(refNo);
     values.referenceNo = refNo;
     values.createdAt = date;
     values.updatedAt = date;

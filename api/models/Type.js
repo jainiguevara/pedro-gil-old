@@ -15,7 +15,7 @@ module.exports = {
     
     module : { 
       type: 'integer',
-      enum: [1, 2, 3], // 1 = Payment, 2 = Expense, 3 = Service Fee
+      enum: [1, 2, 3, 4], // 1 = Payment, 2 = Expense, 3 = Service Fee
       required: true
     },
     
