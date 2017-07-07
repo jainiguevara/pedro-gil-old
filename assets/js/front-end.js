@@ -385,7 +385,7 @@ $('#applicant-create').on("submit", function(event) {
                 });
                 return;
             } else {
-                alert(JSON.stringify(res));
+                //alert(JSON.stringify(res));
                 $('#applicant-create-message').html(function createMessage(){
                 var message = "<div class=\"alert alert-success\">" +
                     "<big name=\"result\">Applicant created! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";

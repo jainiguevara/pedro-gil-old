@@ -121,8 +121,7 @@ module.exports = {
                 date.getDay() + 
                 date.getYear() +
                 date.getHours() +
-                date.getMinutes() +
-    console.log(refNo);
+                date.getMinutes();
     values.referenceNo = refNo;
     values.createdAt = date;
     values.updatedAt = date;

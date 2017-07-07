@@ -14,7 +14,7 @@ module.exports = {
         .exec(function (err, results) {
           console.log(results);
             if (err) { console.log(err); return res.json(err); }
-            if (results == undefined) {
+            if (typeof results === 'undefined') {
               //Create new applicant if no record found
               Applicant.create(req.body).exec(function applicantSaved(err, created)
               {
