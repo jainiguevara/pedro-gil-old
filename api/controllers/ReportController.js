@@ -159,18 +159,28 @@ module.exports = {
 	deployment: function(req, res) {
 	    if (typeof req.session.me === 'undefined') { req.session.me = undefined; return res.redirect('/'); };
 	    res.locals.layout = "layout-report";
-		  res.locals.title = "Deployments Report";
+		  res.locals.title = "Applicant Status Report";
 	    var endDate = new Date(req.param('end'));
       endDate.setDate(endDate.getDate() + 1);
       var dailyParam = new Date(req.param('start'));
       dailyParam.setDate(dailyParam.getDate() + 1)
       //var dateParam = req.param('start') !== req.param('end') ? { '>=': req.param('start'), '<': endDate } : { '>': req.param('start') } ;
       var dateParam = { '>=': req.param('start'), '<': endDate },
-      params = {
+      state = -1;
+      switch (req.param('state')) {
+        case 'NEW': state = 0; break;
+        case 'DEPLOYED': state = 1; break;
+        case 'CANCELLED': state = 2; break;
+        case 'TERMINATED': state = 3; break;
+        default:
+        state = -1
+      }
+      var params = {
           status : 1,
-          state : 1,
           dateDeployed: dateParam
       };
+      if (state !== -1)
+        params.state = state;
       if (req.param('principal') !== 'ALL')
         params.principal = req.param('principal');
       if (req.param('country') !== 'ALL')
@@ -191,6 +201,8 @@ module.exports = {
       	    		    name : a.firstName + ' ' + a.lastName, 
       	    		    dateOfBirth : setToMMDDYYYY(a.dateOfBirth), 
       	    		    passportNo : a.passportNo,
+      	    		    state : a.state,
+      	    		    source : a.source,
       	    		    oec : a.oec,
       	    		    cg : a.cg,
       	    		    pdos : a.pdos,
@@ -227,11 +239,30 @@ module.exports = {
       Applicant.findOne({ id: req.param('id'), status : 1 })
                 .populate('expenses', { where: { status: 1 } } )
                 .populate('payments', { where: { status: 1 } })
+                .populate('collectibles', { where: { status: 1 } })
         .exec(function (err, results) {
             if (err) { console.log(err); return res.json(err); }
           if (err) { console.log(err); return res.json(err); }
     	    console.log(results);
           return res.view('private/ledger', { report: results });
+        });
+      } catch (e) { console.log(e); return res.json(e); }
+	},
+	ledgerHistory: function(req, res) {
+	    if (typeof req.session.me === 'undefined') { req.session.me = undefined; return res.redirect('/'); };
+	    res.locals.layout = "layout-report";
+		  res.locals.title = "Ledger History";
+      console.log('Report Parameters:');
+      try {
+      Applicant.find({ passportNo: req.param('passportNo'), status : 1 })
+                .populate('expenses', { where: { status: 1 } } )
+                .populate('payments', { where: { status: 1 } })
+                .populate('collectibles', { where: { status: 1 } })
+        .exec(function (err, results) {
+            if (err) { console.log(err); return res.json(err); }
+          if (err) { console.log(err); return res.json(err); }
+    	    console.log(results);
+          return res.view('private/ledgerhistory', { report: results });
         });
       } catch (e) { console.log(e); return res.json(e); }
 	},

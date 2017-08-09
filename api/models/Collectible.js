@@ -1,5 +1,5 @@
 /**
- * Type.js
+ * Collectible.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -8,14 +8,27 @@
 module.exports = {
 
   attributes: {
-    description : {
-      type: 'string',
+ type : {
+    type: 'string',
+      //enum: [0, 1],
+      //defaultsTo : 0,
       required: true
     },
     
-    module : { 
-      type: 'integer',
-      enum: [1, 2, 3, 4], // 1 = Payment, 2 = Expense, 3 = Service Fee, 4 = Collectible
+    center : {
+      type: 'string',
+      //enum: [0, 1],
+      //defaultsTo : 0,
+      //required: true
+    },
+    
+    transactionDate : { 
+      type: 'date', 
+      required: true
+    },
+    
+    amount : { 
+      type: 'float',
       required: true
     },
     
@@ -34,9 +47,14 @@ module.exports = {
     updatedBy : {
       type: 'string',
       required: true
+    },
+    
+    owner: {
+      model: 'applicant',
+      required: true
     }
   },
-    
+  
   beforeCreate: function (values, cb) {
     var date = sails.config.globals.phDate;
     values.createdAt = date;

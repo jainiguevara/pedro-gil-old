@@ -47,8 +47,10 @@ module.exports.routes = {
   'get /report/expense' : 'ReportController.expense',
   'get /report/collection' : 'ReportController.collection',
   'get /report/collectibles' : 'ReportController.collectibles',
-  'get /report/deployment' : 'ReportController.deployment',
+  //'get /report/deployment' : 'ReportController.deployment',
+  'get /report/appstatus' : 'ReportController.deployment',
   'get /report/ledger' : 'ReportController.ledger',
+  'get /report/ledgerhistory' : 'ReportController.ledgerHistory',
   
   /* JSON API */
   
@@ -68,6 +70,7 @@ module.exports.routes = {
   'post /applicant/create' : 'ApplicantController.create',
   'post /applicant/update' : 'ApplicantController.update',
   'post /applicant/deploy' : 'ApplicantController.deploy',
+  'post /applicant/cancel' : 'ApplicantController.cancel',
   //Payment
   'post /payment/create' : 'PaymentController.create',
   'post /payment/update' : 'PaymentController.update',
@@ -90,6 +93,11 @@ module.exports.routes = {
   'post /tieup/update' : 'TieUpController.update',
   'get /tieup/get' : 'TieUpController.get',
   'get /tieup/search' : 'TieUpController.search',
+  //Source
+  'post /source/create' : 'SourceController.create',
+  'post /source/update' : 'SourceController.update',
+  'get /source/get' : 'SourceController.get',
+  'get /source/search' : 'SourceController.search',
   //Country
   'post /country/create' : 'CountryController.create',
   'post /country/update' : 'CountryController.update',
@@ -102,10 +110,9 @@ module.exports.routes = {
   'get /center/search' : 'CenterController.search',
   /* GET ACTIONS RE-ROUTES */
   //Command
-  'get /command' : '/',
-  'get /permission' : '/',
-  'get /permission/create' : 'UserController.create',
-  'get /permission/update' : 'UserController.update',
+  // 'get /command' : '/',
+  // 'post /command/create' : '/',
+  // 'post /command/update' : '/',
   //User
   'get /user' : '/',
   'get /user/create' : '/',
@@ -132,13 +139,17 @@ module.exports.routes = {
   'get /servicefee/create' : '/',
   'get /servicefee/update' : '/',
   //Type
-  'get /type' : '/',
-  'get /type/create' : '/',
-  'get /type/update' : '/',
+  // 'get /type' : '/',
+  // 'get /type/create' : '/',
+  // 'get /type/update' : '/',
   //Tie-Up
   'get /tieup' : '/',
   'get /tieup/create' : '/',
   'get /tieup/update' : '/',
+  //Source
+  //'get /source' : '/',
+  'get /source/create' : '/',
+  'get /source/update' : '/',
   //Country
   'get /country' : '/',
   'get /country/create' : '/',

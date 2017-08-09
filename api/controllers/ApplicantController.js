@@ -36,16 +36,29 @@ module.exports = {
   
   update: function(req, res) {
     try {
-      Applicant.update(req.body.id, req.body).exec(function afterwards(err, updated){
-        if (err) { console.log(err); return res.json(err); }
-        console.log('Updated applicant by admin (' + req.body.updatedBy + '): ' + JSON.stringify(updated));
-        return res.json(updated);
-      });
+      //SEARCH BY ID, STATUS = 1 AND STATE = 0 (NOT YET DEPLOYED)
+        //Object: Applicant 
+        Applicant.findOne({ passportNo: req.body.passportNo, status : 1, state : 0 })
+        .exec(function (err, results) {
+          if (err) { console.log(err); return res.json(err); }
+            Applicant.update(req.body.id, req.body).exec(function afterwards(err, updated){
+              if (err) { console.log(err); return res.json(err); }
+              console.log('Updated applicant by (' + req.body.updatedBy + '): ' + JSON.stringify(updated));
+              return res.json(updated);
+            });
+        });
     } catch (e) { console.log(e); return res.json(e); }
   },
   
   deploy: function(req, res) {
     try {
+      var state = 0;
+      switch (req.body.state) {
+        case 'DEPLOYED': state = 1; break;
+        case 'CANCELLED': state = 2; break;
+        case 'TERMINATED': state = 3; break;
+        default: state = 0;
+      }
       Applicant.update(req.body.id, 
       { 
         dateDeployed : req.body.dateDeployed,
@@ -54,11 +67,28 @@ module.exports = {
         cg : req.body.cg,
         employer : req.body.employer,
         principal : req.body.principal,
-        state : 1, 
+        state : state,
+        remarks : req.body.remarks,
         updatedBy : req.body.updatedBy
       }).exec(function afterwards(err, updated){
         if (err) { console.log(err); return res.json(err); }
         console.log('Updated applicant via index card: ' + JSON.stringify(updated));
+        return res.json(updated);
+      });
+    } catch (e) { console.log(e); return res.json(e); }
+  },
+  
+  cancel: function(req, res) {
+    try {
+      console.log(req.body);
+      Applicant.update(req.body.id, 
+      { 
+        state : 2, 
+        remarks : req.body.remarks,
+        updatedBy : req.body.updatedBy
+      }).exec(function afterwards(err, updated){
+        if (err) { console.log(err); return res.json(err); }
+        console.log('Application cancelled: ' + JSON.stringify(updated));
         return res.json(updated);
       });
     } catch (e) { console.log(e); return res.json(e); }

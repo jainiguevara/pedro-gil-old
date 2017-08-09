@@ -1,0 +1,162 @@
+<div class="row"><div class="col-lg-12"><h1 class="page-header">Applicant Ledger History</h1></div></div>
+<div class="row">
+    <div class="col-lg-12">
+        <button id="button-export-history" class="btn btn-success">Download</button>
+    </div>    
+</div>
+<br/>
+
+<div id="export-report-history" class="row">
+    <div class="col-lg-12">
+    <% //loop ledgers
+    for (var r=0; r < report.length; r++) { %>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="table-responsive">
+                        <table style="font-size: 80%;" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                            <tbody>
+                                <%
+                                var payments = 0, expenses = 0;
+                                //var r = 2;
+                                if (typeof report[r] !== 'undefined') { %>
+                                    <tr><td><b>Reference No.</b></td><td><b><%= report[r].referenceNo %></b></td></tr>
+                                    <tr><td>Name</td><td><%= report[r].firstName %> <%= report[r].lastName %></td></tr>
+                                    <tr><td>Date of Birth</td><td><%= setToMMDDYYYY(report[r].dateOfBirth) %></td></tr>
+                                    <tr><td>Passport No.</td><td><%= report[r].passportNo %></td></tr>
+                                    <tr><td>Source</td><td><%= report[r].source %></td></tr>
+                                    <tr><td>OEC</td><td><%= report[r].oec %></td></tr>
+                                    <tr><td>CG</td><td><%= report[r].cg %></td></tr>
+                                    <tr><td>PDOS</td><td><%= report[r].pdos %></td></tr>
+                                    <tr><td>Principal</td><td><%= report[r].principal %></td></tr>
+                                    <tr><td>Employer</td><td><%= report[r].employer %></td></tr>
+                                    <tr><td>Country</td><td><%= report[r].country %></td></tr>
+                                    <tr><td>Application Status</td><td><%
+                                        switch (report[r].state) {
+                                            case 0: %>NEW<% break;
+                                            case 1: %>DEPLOYED<% break;
+                                            case 2: %>CANCELLED<% break;
+                                            case 3: %>TERMINATED<% break;
+                                        } 
+                                    %></td></tr>
+                                    <tr><td>Date of Completion</td><td><%= setToMMDDYYYY(report[r].dateDeployed) %></td></tr>
+                                    <tr><td>Remarks</td><td><%
+                                    if (typeof report[r].remarks === "undefined") {
+                                        %>N/A<%
+                                    } else { %>
+                                        <%=report[r].remarks %>
+                                    </td></tr>
+                                <% } 
+                                } %>
+                            </tbody>
+                        </table>
+                        <br /><br/> 
+                    </div>
+                </div>
+                <div class='col-lg-6'>
+                    <div class="table-responsive">
+                        <table style="font-size: 80%;" id="table-report-deployment" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>    
+                                    <th>Transaction Date</th>
+                                    <th>Transaction</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% var payments = 0, collectibles = 0, expenses = 0;
+                                
+                                if (typeof report[r] !== 'undefined') {
+                                    for (var i=0; i < report[r].payments.length; i++) { 
+                                        payments += report[r].payments[i].amount;%>
+                                        <tr>
+                                          <td><%= setToMMDDYYYY(report[r].payments[i].transactionDate) %></td>
+                                          <td>Payment</td>
+                                          <% if (report[r].payments[i].type === "Rebate" | report[r].payments[i].type === "Insurance") { %>
+                                          <td><%= report[r].payments[i].type %> (<%=report[r].payments[i].center%>)</td>
+                                          <% } else if (report[r].payments[i].type === "Collectible") { %>
+                                          <td><%= report[r].payments[i].type %> (<%=report[r].payments[i].collectType %>)</td>
+                                          <% } else { %>
+                                          <td><%= report[r].payments[i].type %></td>
+                                          <% } %>
+                                          <td><%= addCommas(parseFloat(Math.round(report[r].payments[i].amount * 100) / 100).toFixed(2)) %></td>
+                                        </tr>
+                                    <% } 
+                                } 
+                                if (typeof report[r] !== 'undefined') {
+                                    
+                                    for (var i=0; i < report[r].collectibles.length; i++) { 
+                                        collectibles += report[r].collectibles[i].amount;%>
+                                        <tr>
+                                          <td><%= setToMMDDYYYY(report[r].collectibles[i].transactionDate) %></td>
+                                          <td>Collectibles</td>
+                                          <% if (report[r].collectibles[i].type === "Rebate") { %>
+                                          <td><%= report[r].collectibles[i].type %> (<%=report[r].collectibles[i].center%>)</td>
+                                          <% } else { %>
+                                          <td><%= report[r].collectibles[i].type %></td>
+                                          <% } %>
+                                          <td><%= addCommas(parseFloat(Math.round(report[r].collectibles[i].amount * 100) / 100).toFixed(2)) %></td>
+                                        </tr>
+                                    <% }
+                                }
+                                if (typeof report[r] !== 'undefined') {
+                                    for (var i=0; i < report[r].expenses.length; i++) { 
+                                        expenses += report[r].expenses[i].amount;%>
+                                        <tr>
+                                          <td><%= setToMMDDYYYY(report[r].expenses[i].transactionDate) %></td>
+                                          <td>Expense</td>
+                                          <td><%= report[r].expenses[i].type %></td>
+                                          <td><%= addCommas(parseFloat(Math.round(report[r].expenses[i].amount * 100) / 100).toFixed(2)) %></td>
+                                        </tr>
+                                    <% }
+                                } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class='col-lg-2'>
+                    <table style="font-size: 80%;" class="table table-bordered table-hover table-striped" cellspacing="0" width="100%">
+                            <tbody>
+                                <% if (typeof report[r] !== 'undefined') { %>
+                                    <tr><td>Total Payments</td><td><%= addCommas(parseFloat(Math.round(payments * 100) / 100).toFixed(2)) %></td></tr>
+                                    <tr><td>Total Collectibles</td><td><%= addCommas(parseFloat(Math.round(collectibles * 100) / 100).toFixed(2)) %></td></tr>
+                                    <tr><td>Total Expenses</td><td><%= addCommas(parseFloat(Math.round(expenses * 100) / 100).toFixed(2)) %></td></tr>
+                                    <tr><td>Total Difference</td><td><%= addCommas(parseFloat(Math.round(((payments + collectibles) - expenses) * 100) / 100).toFixed(2)) %></td></tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            <br /><br />
+    
+        <% } %>
+    </div>
+</div>
+
+<%
+function setToMMDDYYYY(date) 
+{
+    if (typeof date === 'undefined')
+    return "";
+    else {
+        var date = new Date(date),
+            yr = date.getFullYear(),
+            month = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
+            day = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate();
+        return month + '-' + day + '-' + yr;
+    }
+}
+
+function addCommas(nStr)
+{
+	nStr += '';
+	var x = nStr.split('.');
+	var x1 = x[0];
+	var x2 = x.length > 1 ? '.' + x[1] : '';
+	var rgx = /(\d+)(\d{3})/;
+	while (rgx.test(x1)) {
+		x1 = x1.replace(rgx, '$1' + ',' + '$2');
+	}
+	return x1 + x2;
+}
+%>

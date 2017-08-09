@@ -67,7 +67,7 @@
                                 <a href="#" href='#' data-toggle='modal' data-target='#report-collectibles'>Collectibles</a>
                             </li>
                             <li>
-                                <a href="#" href='#' data-toggle='modal' data-target='#report-deployment'>Deployments</a>
+                                <a href="#" href='#' data-toggle='modal' data-target='#report-appstatus'>Applicant Status</a>
                             </li>
                         </ul>
                     </li>
@@ -327,22 +327,22 @@
       </div>
     </div>
 
-    <div class="modal fade" id="report-deployment" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="label-report-deployment">
+    <div class="modal fade" id="report-appstatus" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="label-report-appstatus">
       <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="label-report-deployment">Deployments Report</h4>
+            <h4 class="modal-title" id="label-report-appstatus">Applicant Status Report</h4>
           </div>
           <div class="modal-body">
-                <form id="form-report-deployment" action="report/deployment" target="_blank">
+                <form id="form-report-appstatus" action="report/appstatus" target="_blank">
                     <div class="form-group">
-                        <div id="report-deployment-message" class="form-group">
+                        <div id="report-appstatus-message" class="form-group">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Start Date</label>
-                        <div class='input-group date' id='report-deployment-start'>
+                        <div class='input-group date' id='report-appstatus-start'>
                             <input name='start' type='text' class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar">
@@ -352,13 +352,24 @@
                     </div>
                     <div class="form-group">
                         <label>End Date</label>
-                        <div class='input-group date' id='report-deployment-end'>
+                        <div class='input-group date' id='report-appstatus-end'>
                                 <input name='end' type='text' class="form-control" />
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar">
                                     </span>
                                 </span>
                             </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Applicant Status</label>
+                        <select name="state" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="">ALL</option>
+                            <option id="0">NEW</option>
+                            <option id="1">DEPLOYED</option>
+                            <option id="2">CANCELLED</option>
+                            <option id="3">TERMINATED</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Country</label>
@@ -372,7 +383,7 @@
                     </div>
                     <div class="form-group">
                         <label>Principal (Tie-Up)</label>
-                        <select id="report-deployment-ddl-principal" name="principal" class="form-control">
+                        <select id="report-appstatus-ddl-principal" name="principal" class="form-control">
                             <!-- CREATE LOGIC HERE -->
                             <option id="">ALL</option>
                             <% for (var i=0; i < ddlTieUp.length; i++) { 

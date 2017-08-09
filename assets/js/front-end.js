@@ -3,6 +3,7 @@ function fillTransactionsTable(res, role) {
     var totalPayment = 0,
      totalExpense = 0,
      totalServiceFee = 0,
+     totalCollectible = 0
      totalDiff = 0;
     $("#cont-applicant-transactions").html(function() {
         var value = 
@@ -32,6 +33,8 @@ function fillTransactionsTable(res, role) {
             value = value + "<td>Payment</td>";
             if (result.type == 'Rebate' | result.type == 'Insurance')
                 value = value + "<td>" + result.type + " (" + result.center +  ")</td>";
+            else if (result.type === 'Collectible')
+                value = value + "<td>" + result.type + " (" + result.collectType +  ")</td>";
             else
                 value = value + "<td>" + result.type + "</td>";
             value = value + "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
@@ -85,6 +88,8 @@ function fillTransactionsTable(res, role) {
             value = value + "<td>Collectibles</td>";
             if (result.type == 'Rebate' | result.type == 'Insurance')
                 value = value + "<td>" + result.type + " (" + result.center +  ")</td>";
+            else if (result.type === 'Collectible')
+                value = value + "<td>" + result.type + " (" + result.collectType +  ")</td>";
             else
                 value = value + "<td>" + result.type + "</td>";
             value = value + "<td>" + setToMMDDYYYY(result.transactionDate) + "</td>" +
@@ -92,15 +97,16 @@ function fillTransactionsTable(res, role) {
             "<td>" + addCommas(result.amount) + "</td>" +
             "<td>" + result.createdBy + "</td>" +
             "</tr>";
-            totalPayment = totalPayment + result.amount;
+            totalCollectible = totalCollectible + result.amount;
         });
         value = value + "</tbody>" +
                             "</table>";
         return value;
     })
     $("#applicant-transaction-summary p[name='total-payment']").text(addCommas(totalPayment));
+    $("#applicant-transaction-summary p[name='total-collectible']").text(addCommas(totalCollectible));
     $("#applicant-transaction-summary p[name='total-expense']").text(addCommas(totalExpense));
-    $("#applicant-transaction-summary p[name='total-difference']").text(addCommas(totalPayment - totalExpense));
+    $("#applicant-transaction-summary p[name='total-difference']").text(addCommas((totalPayment + totalCollectible) - totalExpense));
     //$("#applicant-transaction-summary p[name='total-servicefee']").text(totalServiceFee);
     //IMPLEMENTED INSIDE fillTransactionsTable SO THAT IT CAN BE CALLED
     $('#table-applicant-transactions a').click(function(event){
@@ -113,6 +119,7 @@ function fillTransactionsTable(res, role) {
     });
     $('#table-applicant-transactions').DataTable();
 }
+
 function loadApplicantTransaction(arr) {
     var module = 0;
     if (arr[1] === 'Payment') module = 1;
@@ -186,12 +193,30 @@ function loadApplicantData(arr) {
                         $("#applicant-update input[name='lastName']").val(res.lastName);
                         $("#applicant-update input[name='dateOfBirth']").val(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-update input[name='passportNo']").val(res.passportNo);
+                        //$("#ddlState").prop('selectedIndex', res.state);
+                        $("#applicant-update input[name='state']").val(res.state);
+                        switch (res.state) {
+                            case 0: $("#applicant-update input[name='lblState']").val('NEW'); break;
+                            case 1: $("#applicant-update input[name='lblState']").val('DEPLOYED'); break;
+                            case 2: $("#applicant-update input[name='lblState']").val('CANCELLED'); break;
+                            case 3: $("#applicant-update input[name='lblState']").val('TERMINATED'); break;
+                            default: break;    
+                        }
                         $("#applicant-update input[name='oec']").val(res.oec);
                         $("#applicant-update input[name='cg']").val(res.cg);
                         $("#applicant-update input[name='pdos']").val(res.pdos);
                         $("#applicant-update select[name='principal']").val(res.principal);
                         $("#applicant-update input[name='employer']").val(res.employer);
                         $("#applicant-update select[name='country']").val(res.country);
+                        $("#applicant-update select[name='source']").val(res.source);
+                        $("#applicant-update p[name='updatedBy']").text(res.updatedBy);
+                        $("#applicant-update p[name='updatedAt']").text(function() {
+                            var d = new Date(res.updatedAt);
+                            var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+                            var newDateWithOffset = new Date(utc + (3600000 * '+8'));
+                            return newDateWithOffset;
+                        }
+                        );
                         $("#applicant-update input[name='id']").val(res.id);
                     } else if (arr[0] === 'view') {
                         if (res.error) { 
@@ -200,45 +225,118 @@ function loadApplicantData(arr) {
                             return; 
                         }
                         /* FILL INDEX CARD VIEW */
-                        $('#tab-applicant-indexCard-txListing').html(
-                            "<h2>Transaction Listing</h2><a href='report/ledger?id=" + res.id + "' target='_blank'>Detailed View</a><br/><br/>");
+                        //tab-applicant-indexCard-history
+                         $('#tab-applicant-indexCard-history').html(
+                            "<h2>Applicant Index Card</h2>" +
+                            "<a href='report/ledger?id=" + res.id + "' target='_blank'>" +
+                                "<button type='button' class='btn btn-default'>" +
+                                    "<span class='glyphicon glyphicon-file' aria-hidden='true'></span>  View Individual Ledger" +
+                                "</button>" +
+                            "</a>  " +
+                            "<a href='report/ledgerhistory?passportNo=" + res.passportNo + "' target='_blank'>" +
+                            "<button type='button' class='btn btn-default'>" +
+                            "<span class='glyphicon glyphicon-duplicate' aria-hidden='true'></span>  View Ledger History" +
+                            "</button>" +
+                            "</a><br/><br/>");
+
                         $("#applicant-indexCard p[name='referenceNo']").text(res.referenceNo);
                         $("#applicant-indexCard p[name='firstName']").text(res.firstName);
                         $("#applicant-indexCard p[name='lastName']").text(res.lastName);
                         $("#applicant-indexCard p[name='dateOfBirth']").text(setToMMDDYYYY(res.dateOfBirth));
                         $("#applicant-indexCard p[name='passportNo']").text(res.passportNo);
+                        $("#applicant-indexCard p[name='source']").text(res.source);
+                        $("#applicant-indexCard p[name='updatedBy']").text(res.updatedBy);
+                        $("#applicant-indexCard p[name='updatedAt']").text(function() {
+                            var d = new Date(res.updatedAt);
+                            var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+                            var newDateWithOffset = new Date(utc + (3600000 * '+8'));
+                            return newDateWithOffset;
+                        });
+                        //REMARKS & APPLICATION STATUS
+                        if (res.state === 0) {
+                            $('#cont-remarks').html(function() {
+                                return "<label>Remarks</label>" +
+                                "<textarea name='remarks' rows='3' style='resize:none' class='form-control' placeholder='Remarks'></textarea>";
+                            });
+                            $("#cont-state").html(function() {
+                                return "<label>Application Status</label>" +
+                                "<select class='form-control' name='state'>" +
+                                    "<option id='0'>NEW</option>" +
+                                    "<option id='1'>DEPLOYED</option>" +
+                                    "<option id='2'>CANCELLED</option>" +
+                                    "<option id='3'>TERMINATED</option>" +
+                                "</select>";
+                            });
+                        } else {
+                            switch (res.state) {
+                                case 1: $("#cont-state").html("<label>Application Status</label><p class='form-control-static'>DEPLOYED</p>"); break;
+                                case 2: $("#cont-state").html("<label>Application Status</label><p class='form-control-static'>CANCELLED</p>"); break;
+                                case 3: $("#cont-state").html("<label>Application Status</label><p class='form-control-static'>TERMINATED</p>"); break;
+                                default: break;
+                            }
+                            $('#cont-remarks').html(function() {
+                                return "<label>Remarks</label>" +
+                                "<p class='form-control-static'>" + res.remarks + "</p>" +
+                                "<input name=\"remarks\" type=\"hidden\" value=\"" + res.remarks + "\">";
+                            });
+                            
+                        }
                         //OEC
                         if (res.oec === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
-                            $('#cont-oec').html(
-                                "<label>OEC <i class=\"fa fa-check\"></i></label>" +
+                            if (res.state === 0) {
+                                $('#cont-oec').html(
+                                    "<label>OEC <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"oec\" class=\"form-control\" placeholder=\"OEC\">"
                                 );
-                        } else {
-                            $('#cont-oec').html(
+                            } else {
+                                $('#cont-oec').html(
                                 "<label>OEC <i class=\"fa fa-check\"></i></label>" +
                                     "<p class=\"form-control-static\">" + res.oec + "</p>" +
                                     "<input name=\"oec\" type=\"hidden\" value=\"" + res.oec + "\">"
                                 );
+                            }
+                        } else {
+                            $('#cont-oec').html(
+                            "<label>OEC <i class=\"fa fa-check\"></i></label>" +
+                                "<p class=\"form-control-static\">" + res.oec + "</p>" +
+                                "<input name=\"oec\" type=\"hidden\" value=\"" + res.oec + "\">"
+                            );
                         }
                         //CG
                         if (res.cg === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
-                            $('#cont-cg').html(
-                                "<label>CG <i class=\"fa fa-check\"></i></label>" +
+                            if (res.state === 0) {
+                                $('#cont-cg').html(
+                                    "<label>CG <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"cg\" class=\"form-control\" placeholder=\"CG\">"
                                 );
-                        } else {
-                            $('#cont-cg').html(
+                            } else {
+                                $('#cont-cg').html(
                                 "<label>CG <i class=\"fa fa-check\"></i></label>" +
                                     "<p class=\"form-control-static\">" + res.cg + "</p>" +
                                     "<input name=\"cg\" type=\"hidden\" value=\"" + res.cg + "\">"
                                 );
+                            }
+                        } else {
+                            $('#cont-cg').html(
+                            "<label>CG <i class=\"fa fa-check\"></i></label>" +
+                                "<p class=\"form-control-static\">" + res.cg + "</p>" +
+                                "<input name=\"cg\" type=\"hidden\" value=\"" + res.cg + "\">"
+                            );
                         }
                         //PDOS
                         if (res.pdos === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
+                            if (res.state === 0) {
                             $('#cont-pdos').html(
                                 "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"pdos\" class=\"form-control\" placeholder=\"PDOS\">"
                                 );
+                            } else {
+                                $('#cont-pdos').html(
+                                "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
+                                    "<p class=\"form-control-static\">" + res.pdos + "</p>" +
+                                    "<input name=\"pdos\" type=\"hidden\" value=\"" + res.pdos + "\">"
+                                );
+                            }
                         } else {
                             $('#cont-pdos').html(
                                 "<label>PDOS <i class=\"fa fa-check\"></i></label>" +
@@ -246,14 +344,21 @@ function loadApplicantData(arr) {
                                     "<input name=\"pdos\" type=\"hidden\" value=\"" + res.pdos + "\">"
                                 );
                         }
-                        //Eployer
+                        //Employer
                         if (res.employer === ""  & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer") {
+                            if (res.state === 0) {
                             $('#cont-employer').html(
                                 "<label>Employer <i class=\"fa fa-check\"></i></label>" +
                                     "<input name=\"employer\" class=\"form-control\" placeholder=\"Employer\">"
                                 );
+                            } else {
+                                $('#cont-employer').html(
+                                "<label>Employer <i class=\"fa fa-check\"></i></label>" +
+                                    "<p class=\"form-control-static\">" + res.employer + "</p>" +
+                                    "<input name=\"employer\" type=\"hidden\" value=\"" + res.employer + "\">"
+                                );
+                            }
                         } else {
-                            //$("#applicant-indexCard-col2 p[name='principal']").text();
                             $('#cont-employer').html(
                                 "<label>Employer <i class=\"fa fa-check\"></i></label>" +
                                     "<p class=\"form-control-static\">" + res.employer + "</p>" +
@@ -263,30 +368,43 @@ function loadApplicantData(arr) {
                         $("#applicant-indexCard-col2 p[name='country']").text(res.country);
                         $("#applicant-indexCard-col2 input[name='id']").val(res.id);
                         $("#applicant-transaction-create input[name='owner']").val(res.id);
+                        //for cancel modal view
+                        $("#form-applicant-cancel input[name='id']").val(res.id);
+                        $("#form-applicant-cancel input[name='owner']").val(res.id);
+                        $("#form-applicant-cancel input[name='arr']").val(arr);
                         if (res.dateDeployed === undefined & $("#applicant-indexCard-col2 input[name='role']").val() !== "viewer" |
                         ($("#applicant-indexCard-col2 input[name='role']").val() === "su" |
                             $("#applicant-indexCard-col2 input[name='role']").val() === "admin")) {
-                            $("#cont-deployment").html(
-                                "<label>Deployment Date <i class=\"fa fa-check\"></i></label>" + 
-                                "<div class='input-group date' id='deploymentDate-applicant-view'>" +
-                                "<input name='dateDeployed' type='text' class='form-control' placeholder='Deployment Date' />" +
-                                "<span class='input-group-addon'>" +
-                                    "<span class='glyphicon glyphicon-calendar'>" +
+                            // FOR NEW APPLICANTS
+                            if (res.state === 0) {
+                                $("#cont-deployment").html(
+                                    "<label>Date of Completion <i class=\"fa fa-check\"></i></label>" + 
+                                    "<div class='input-group date' id='deploymentDate-applicant-view'>" +
+                                    "<input name='dateDeployed' type='text' class='form-control' placeholder='Deployment/Cancellation/Termination Date' />" +
+                                    "<span class='input-group-addon'>" +
+                                        "<span class='glyphicon glyphicon-calendar'>" +
+                                        "</span>" +
                                     "</span>" +
-                                "</span>" +
-                                "</div>"
+                                    "</div>"
                                 );
-                            $("#indexCard-btn-update").prop('disabled', false);
-                            $('#deploymentDate-applicant-view').datetimepicker({
-                                viewMode: 'months',
-                                format: 'MM/DD/YYYY'
-                            });
-                            if (res.dateDeployed !== undefined)
-                                $("#applicant-indexCard-col2 input[name='dateDeployed']").val(setToMMDDYYYY(res.dateDeployed));
+                                $('#deploymentDate-applicant-view').datetimepicker({
+                                    viewMode: 'months',
+                                    format: 'MM/DD/YYYY'
+                                });
+                                $("#indexCard-btn-update").prop('disabled', false);
+                            } else {
+                                $('#cont-deployment').html(function() {
+                                    return "<label>Date of Completion</label>" +
+                                    "<p class='form-control-static'>" + setToMMDDYYYY(res.dateDeployed) + "</p>" +
+                                    "<input name=\"dateDeployed\" type=\"hidden\" value=\"" + res.dateDeployed + "\">";
+                                    });
+                                 $("#indexCard-btn-update").prop('disabled', true);
+                            }
                         }
                         else {
                             $("#cont-deployment").html("<label>Deployment Date <i class=\"fa fa-check\"></i></label><p name=\"dateDeployed\" class=\"form-control-static\">" + setToMMDDYYYY(res.dateDeployed) + "</p>");
                             $("#indexCard-btn-update").prop('disabled', true);
+                            $("#indexCard-btn-cancel").prop('disabled', true);
                         }
                         if (res.principal !== "" & res.principal !== "N/A" & res.principal !== "(Select Principal)") {
                             $("#cont-principal").html(
@@ -362,7 +480,9 @@ $('#table-applicant-results a').on('click', function(event){
 
 $('#applicant-create').on("submit", function(event) {
   event.preventDefault();
-  if ($('#applicant-create-ddl-principal option:selected').val() === '(Select Principal)') {
+  if ($('#applicant-create-ddl-principal option:selected').val() === '(Select Principal)' |
+  $('#applicant-create-ddl-source option:selected').val() === '(Select Source)'
+  ) {
         getValidationError('#applicant-create-message');
         return;
   }
@@ -405,14 +525,17 @@ $('#applicant-create').on("submit", function(event) {
 
 $('#applicant-update').on("submit", function(event) {
   event.preventDefault();
+  if ($("#applicant-update select[name='principal']").val()  === '(Select Pricipal)' |
+      $("#applicant-update select[name='source']").val()  === '(Select Source)' |
+      $("#applicant-update select[name='source']").val()  === undefined |
+        $("#applicant-update select[name='source']").val()  === null) {
+        getValidationError('#applicant-update-message');
+        return;
+  }
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
    var data = $('#applicant-update').serialize();
-   console.log(data);
     $.ajax({
         url: uri + "applicant/update",
-        // headers: {
-        //     "id": data.id
-        // },
         type: "POST",
         data: data,
         success: function (res) {
@@ -420,8 +543,8 @@ $('#applicant-update').on("submit", function(event) {
             {  
                 $('#applicant-update-message').html(function createMessage(){
                     var message = "";
-                    if (res.invalidAttributes.passportNo[0].rule === 'unique')
-                        message = message + "<div class=\"alert alert-warning\"><big name=\"result\"><b>Warning!</b> "+ res.invalidAttributes.passportNo[0].message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
+                    if (res.error === 'active')
+                        message = message + "<div class=\"alert alert-info\"><big name=\"result\"><b>FYI. </b> "+ res.message + " <i class=\"fa fa-hand-paper-o\"></i></big></div>";
                     else
                         message = message + "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
                     return message;
@@ -443,10 +566,12 @@ $('#applicant-update').on("submit", function(event) {
     });;
 });
 
-
-$('#applicant-indexCard-col2').on("submit", function(event) {
+$('#indexCard-btn-update').on("click", function(event) {
   event.preventDefault();
+  
+  $('#ddl-transaction option:selected').attr("id");
   waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+  alert
    var data = $('#applicant-indexCard-col2').serialize();
    if ($("#applicant-indexCard-col2 input[name='employer']").val() === "" | 
    $("#applicant-indexCard-col2 input[name='dateDeployed']").val() === "" | 
@@ -457,6 +582,8 @@ $('#applicant-indexCard-col2').on("submit", function(event) {
        getValidationError('#applicant-indexCard-message');
        window.setTimeout(waitingDialog.hide(),2000);
     } else {
+        if (!confirm("Are you sure you want to this update application?"))
+            return;
         $.ajax({
             url: uri + "applicant/deploy",
             type: "POST",
@@ -489,6 +616,104 @@ $('#applicant-indexCard-col2').on("submit", function(event) {
             window.setTimeout(waitingDialog.hide(),2000);
         });
         }
+});
+
+function loadApplicantCancellation(arr) {
+    var module = 0;
+    if (arr[1] === 'Payment') module = 1;
+    else if (arr[1] === 'Expense') module = 2;
+    else if (arr[1] === 'Service Fee') module = 3;
+    $.ajax({
+        url: uri + "type/get?module=" + module,
+        type: "GET",
+        dataType: "jsonp",
+        success: function (res) {
+            if (res.error)
+            { 
+                $('#applicant-transaction-message').html(function createPayment(){
+                    var message = "";
+                    message = "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                    return message;
+                });
+                return;
+            } else {
+                //POPULATE TYPE AND ID
+                $("#applicant-transaction-update select[name='type']").html("<option>(Select Type)</option>");
+                $.each(res, function(d, result){
+                    $("#applicant-transaction-update select[name='type']").append("<option id='" + result.module + "'>" + result.description + "</option>");
+                });
+                $("#applicant-transaction-update input[name='id']").val(arr[0]);
+                $("#applicant-transaction-update p[name='label-transaction']").text(arr[1]);
+                $("#applicant-transaction-update select[name='type']").val(arr[2]);
+                $("#applicant-transaction-update input[name='transactionDate']").val(arr[3]);
+                $("#applicant-transaction-update input[name='amount']").val(arr[4]);
+                // if (arr[1] === 'Expense')
+                // {
+                //     // $('#cont-transaction-update-actualCost').html(
+                //     //     "<label>Actual Cost <i class='fa fa-check'></i></label>" +
+                //     //         "<input name='actualCost' class='form-control' placeholder='Actual Cost'>"
+                //     //     );
+                //     //$("#applicant-transaction-update input[name='actualCost']").val(arr[5] === 'undefined' ? 0 : arr[4]); 
+                //     $("#applicant-transaction-update input[name='owner']").val(arr[6]);
+                // }   
+                // else
+                // {
+                //     //$('#cont-transaction-update-actualCost').html('');
+                    $("#applicant-transaction-update input[name='owner']").val(arr[5]);
+                // }
+                
+            }
+        }
+    }).done(function() {
+        window.setTimeout(waitingDialog.hide(),2000);
+    }).error(function(err){
+        getInternalError('#applicant-payment-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+    });
+}
+
+$('#form-applicant-cancel').on("submit", function(event) {
+  event.preventDefault();
+  if (confirm("Are you sure you wanted to cancel this Applicant?")) {
+  waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+   var data = $('#form-applicant-cancel').serialize();
+    if ($("#form-applicant-cancel input[name='remarks']").val() === "") {
+        getValidationError('#applicant-cancel-message');
+        window.setTimeout(waitingDialog.hide(),2000);
+     } else {
+         $.ajax({
+             url: uri + "applicant/cancel",
+             type: "POST",
+             data: data,
+             success: function (res) {
+                 if (res.error)
+                 {  
+                     $('#applicant-cancel-message').html(function createMessage(){
+                         var message = "";
+                         message = message + 
+                         "<div class=\"alert alert-danger\"><big name=\"result\"><b>Oops!</b> You need to input valid data in the fields marked with <i class=\"fa fa-check\"></i>.</big></div>";
+                         return message;
+                     });
+                     return;
+                 } else {
+                     $('#applicant-cancel-message').html(function createMessage(){
+                         var message = "<div class=\"alert alert-success\">" +
+                         "<big name=\"result\">Applicantion Cancelled! <i class=\"fa fa-thumbs-o-up\"></i></big></div>";
+                         return message;
+                     });
+                     var arr = $("#form-applicant-cancel input[name='arr']").val().split(",");
+                     //alert ($("#form-applicant-cancel input[name='arr']").val());
+                     loadApplicantData(arr);
+                 }
+             }
+         }).done(function() {
+             window.setTimeout(waitingDialog.hide(),2000);
+         }).error(function(err){
+             getInternalError('#applicant-cancel-message');
+             window.setTimeout(waitingDialog.hide(),2000);
+         });
+     }     
+  }
 });
 
 
@@ -581,11 +806,49 @@ $('#ddl-transaction-type').change(function(event) {
             getInternalError('#applicant-payment-message');
             window.setTimeout(waitingDialog.hide(),2000);
         });
+  } else if (subType === "Collectible") {
+      
+      getCollectibleTypes();
+      
   } else {
       $('#cont-transaction-center').html('');
   }
   //
 });
+
+function getCollectibleTypes() {
+    waitingDialog.show('Please wait...', { dialogSize: 'sm', progressType: 'success' });
+    $.ajax({
+            url: uri + "type/get?module=1", //Payment
+            type: "GET",
+            dataType: "jsonp",
+            //data: type,
+            success: function (res) {
+                if (res.error)
+                { 
+                    getInternalError('#applicant-transaction-message');
+                    return;
+                } else {
+                    $('#cont-transaction-center').html(
+                      "<label>Collectible Type</i></label>" +
+                                        "<select id='ddl-collectType' name='collectType' class='form-control'>" +
+                                            "<option>(Select Type)</option>"
+                    );
+                    $.each(res, function(d, result){
+                        if (result.name !== 'Collectible')
+                            $("#ddl-collectType").append("<option>" + result.description + "</option>");
+                    });
+                    $('#cont-transaction-center').append("</select>");
+                }
+            }
+        }).done(function() {
+            window.setTimeout(waitingDialog.hide(),2000);
+        }).error(function(err){
+            getInternalError('#applicant-payment-message');
+            window.setTimeout(waitingDialog.hide(),2000);
+        });
+}
+
 
 $('#applicant-transaction-create').on("submit", function(event) {
   event.preventDefault();
@@ -1482,7 +1745,7 @@ function setToHHMMSS(date) {
         hh = date.getHours(),
         ss = date.getMinutes(),
         mm = date.getSeconds();
-    return hh + ':' + mm + ':' + ss;
+    return hh + ':' + mm;
 }
 
 $('#dateOfBirth-user-create').datetimepicker({
@@ -1540,12 +1803,12 @@ $('#report-collectibles-end').datetimepicker({
     format: 'MM/DD/YYYY'
 });
 
-$('#report-deployment-start').datetimepicker({
+$('#report-appstatus-start').datetimepicker({
     viewMode: 'months',
     format: 'MM/DD/YYYY'
 });
 
-$('#report-deployment-end').datetimepicker({
+$('#report-appstatus-end').datetimepicker({
     viewMode: 'months',
     format: 'MM/DD/YYYY'
 });
@@ -1561,7 +1824,12 @@ $("#button-export-payment").click(function (e) {
 });
 
 $("#button-export-deployment").click(function (e) {
-    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-deployment').html()));
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-appstatus').html()));
+    e.preventDefault();
+});
+
+$("#button-export-history").click(function (e) {
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export-report-history').html()));
     e.preventDefault();
 });
 

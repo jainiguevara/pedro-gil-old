@@ -145,14 +145,14 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <% if (me.role === "su" | me.role === "admin") { %>
+                                            <% if (me.role === "su" | me.role === "admin" | me.role === "supervisor") { %>
                                             Edit&nbsp;|
                                             <% } %>
                                             View
                                         </th>
                                         <th>Reference No.</th>
                                         <th>Status</th>
-                                        <th>Date Deployed</th>
+                                        <th>Date Completed</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Birthdate</th>
@@ -164,22 +164,27 @@
                                         for (var i=0; i < applicants.length; i++) { %>
                                         <tr>
                                             <td>
-                                                <% if (me.role === "su" | me.role === "admin") { %>
+                                                <% if (me.role === "su" | me.role === "admin" | me.role === "supervisor") { %>
                                                 <a name="update:<%=applicants[i].id%>:<%=me.role%>" href='#tab-applicant-update' role='tab' data-toggle='tab'><i class='fa fa-pencil-square-o'></i></a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                                 <% } %>
                                                 <a name="view:<%=applicants[i].id%>:<%=me.role%>" href='#tab-applicant-indexCard' role='tab' data-toggle='tab'><i class='fa fa-folder-open'></i></i></a>
                                             </td>
                                           <td><%=applicants[i].referenceNo %></td>
                                           <td>
-                                            <% if (applicants[i].dateDeployed === undefined) { %>
+                                            <% if (applicants[i].state === 0) { %>
                                             NEW
-                                            <% } else { %>
+                                            <% } else if (applicants[i].state === 1) { %>
                                             DEPLOYED
+                                            <% } else if (applicants[i].state === 2) { %>
+                                            CANCELLED
+                                            <% } else if (applicants[i].state === 3) { %>
+                                            TERMINATED
                                             <% } %>
                                           </td>
                                           <td>
                                               <%
-                                              if (applicants[i].dateDeployed !== undefined) {
+                                              if (applicants[i].dateDeployed !== undefined &
+                                              applicants[i].dateDeployed !== "" & applicants[i].dateDeployed !== null) {
                                               var date    = new Date(applicants[i].dateDeployed),
                                                     yr      = date.getFullYear(),
                                                     month   = date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1),
@@ -222,8 +227,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6">
-                    <h2>Applicant Index Card</h2><br/><br/>
+                <div class="col-lg-6" id="tab-applicant-indexCard-history">
+                    <h2>Applicant Index Card</h2>
+                    <a href="report/ledger?id=" target="_blank">
+                        <button type='button' class='btn btn-default'>
+                            <span class='glyphicon glyphicon-file' aria-hidden='true'></span>  View Individual Ledger
+                        </button>
+                    </a>
+                    <a href="report/ledgerhistory?passportNo=" target="_blank">
+                        <button type='button' class='btn btn-default'>
+                            <span class='glyphicon glyphicon-duplicate' aria-hidden='true'></span>  View Ledger History
+                        </button>
+                    </a>
+                    <br/><br/>
                     <div id="applicant-indexCard-message" class="form-group">
                     </div>
                 </div>
@@ -254,6 +270,20 @@
                         <label>Passport No.</label>
                         <p name="passportNo" class="form-control-static"></p>
                     </div>
+                    <div class="form-group">
+                        <label>Source</label>
+                        <p name="source" class="form-control-static"></p>
+                    </div>
+                    <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <i><label>Last Update By (Audit)</label>
+                        <p name="updatedBy" class="form-control-static"></p></i>
+                    </div>
+                    <div class="form-group">
+                        <i><label>Last Update Date (Audit)</label>
+                        <p name="updatedAt" class="form-control-static"></p></i>
+                    </div>
                     </form>
                 </div>
                 <div class="col-lg-3">
@@ -281,16 +311,22 @@
                             <label>Country</label>
                             <p name="country" class="form-control-static"></p>
                         </div>
+                        <div class="form-group" id="cont-state">
+                        </div>
                         <div id="cont-deployment" class="form-group">
                             <!--<label>Deployment Date</label>-->
                             <!--<input name="dateDeployed" class="form-control" placeholder="Deployment Date">-->
+                        </div>
+                        <div class="form-group" id="cont-remarks">
                         </div>
                         <div class="form-group">
                             <input name="id" type="hidden" class="form-control">
                             <input name="updatedBy" type="hidden" value="<%= me.username %>">
                             <input name="role" type="hidden" value="<%= me.role %>">
                             <% if (session.me.role !== "viewer") { %>
-                            <button id="indexCard-btn-update" class="btn btn-success">Update</button>
+                                <button id="indexCard-btn-update" class="btn btn-success">Update</button> &nbsp;&nbsp;
+                                <span id="cont-cancel-button">
+                                </span>
                             <% } %>
                         </div>
                     </form>
@@ -298,11 +334,15 @@
                 <div class="col-lg-6">
                     <form id="applicant-transaction-summary">
                         <div class="form-group">
-                           <label>Total Payment</label>
+                           <label>Total Payments</label>
                            <p name="total-payment" class="form-control-static"></p>
                         </div>
                         <div class="form-group">
-                           <label>Total Expense</label>
+                           <label>Total Collectibles</label>
+                           <p name="total-collectible" class="form-control-static"></p>
+                        </div>
+                        <div class="form-group">
+                           <label>Total Expenses</label>
                            <p name="total-expense" class="form-control-static"></p>
                         </div>
                         <div class="form-group">
@@ -320,7 +360,10 @@
                     <div id="applicant-transaction-message" class="form-group">
                     </div>
                 </div>
-                <div class="col-lg-4" id="tab-applicant-indexCard-txListing"><h2>Transaction Listing</h2><a href="report/ledger?id=" target="_blank">Detailed View</a><br/><br/></div>
+                <div class="col-lg-4">
+                    <h2>Transaction Listing</h2>
+                    <br/><br/>
+                </div>
             </div>
             <% } %>
             <div class="row">
@@ -419,6 +462,16 @@
                         <label>Passport No. <i class="fa fa-check"></i></label>
                         <input name="passportNo" class="form-control" placeholder="Passport No.">
                     </div>
+                    <div class="form-group">
+                        <label>Source <i class="fa fa-check"></i></label>
+                        <select id="applicant-create-ddl-source" name="source" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="0">(Select Source)</option>
+                            <% for (var i=0; i < ddlSource.length; i++) { %>
+                                 <option id="<%= ddlSource[i].id %>"><%= ddlSource[i].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -504,6 +557,21 @@
                         <label>Passport No. <i class="fa fa-check"></i></label>
                         <input name="passportNo" class="form-control" placeholder="Passport No.">
                     </div>
+                    <div class="form-group">
+                        <label>Source <i class="fa fa-check"></i></label>
+                        <select name="source" class="form-control">
+                            <!-- CREATE LOGIC HERE -->
+                            <option id="0">(Select Source)</option>
+                            <% for (var i=0; i < ddlSource.length; i++) { %>
+                                 <option id="<%= ddlSource[i].id %>"><%= ddlSource[i].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Application Status</label>
+                        <input name="lblState" class="form-control" placeholder="Application State" readonly>
+                        <input name="state" type="hidden" class="form-control" >
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -541,7 +609,15 @@
                                  <option><%= ddlCountry[i].name %></option>
                             <% } %>
                         </select>
+                    </div><i>
+                    <div class="form-group">
+                        <label>Last Update By (Audit)</label>
+                        <p name="updatedBy"></p>  
                     </div>
+                    <div class="form-group">
+                        <label>Last Update Date (Audit)</label>
+                        <p name="updatedAt"></p>
+                    </div></i>
                 </div>
                 <div class="col-lg-12">
                     <div class="form-group">
@@ -619,6 +695,44 @@
                         <button name="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button class="btn btn-primary">Save changes</button>
                     </div>
+            </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cancel Applicant -->
+<div class="modal fade" id="modal-applicant-cancel" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="applicant-cancelLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-applicant-cancel">Cancel Applicant</h4>
+      </div>
+      <div class="modal-body">
+            <form id="form-applicant-cancel">
+                <div class="form-group">
+                    <div id="applicant-cancel-message" class="form-group">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Remarks <i class="fa fa-check"></i></label>
+                    <textarea name="remarks" rows="3" style="resize:none" class="form-control" placeholder="Remarks"></textarea>
+                </div>
+                <div class="form-group">
+                    <input name="id" type="hidden" class="form-control" value="">
+                    <input name="owner" type="hidden" class="form-control" value="">
+                    <input name="updatedBy" type="hidden" value="<%= me.username %>">
+                    <input name="role" type="hidden" value="<%= me.role %>">
+                    <input name="status" type="hidden" value="">
+                    <input name="arr" type="hidden" value="">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-danger">Update Application</button>
+                    <button name="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </form>
       </div>
       <div class="modal-footer">

@@ -22,12 +22,13 @@ module.exports = {
 		    			name : a.name
 		    		};
 		    	});
-		    	Applicant.find({status : 1}).exec(function (err, results) {
+		    	Applicant.find({status : 1}).sort('createdAt DESC').exec(function (err, results) {
 		    		var applicants = results.map(function(a) {
 		    			return { 
 		    				id : a.id,
 		    				referenceNo : a.referenceNo,
 		    				dateDeployed : a.dateDeployed,
+		    				state: a.state,
 		    				firstName : a.firstName, 
 		    				lastName: a.lastName, 
 		    				dateOfBirth : a.dateOfBirth,
@@ -42,17 +43,27 @@ module.exports = {
 				    		var ddlCountry = results.map(function(a) {
 				    			return { name : a.name };
 				    		});
-				    		var dashboardVals = { 
-				    			me : req.session.me, 
-				    			applicants : applicants,
-				    			ddlTieUp : ddlTieUp, 
-				    			ddlType : ddlType,
-				    			ddlCountry : ddlCountry
-			    			};
-						    res.locals.layout = 'layout';
-							res.locals.title = 'Dashboard';
-							//console.log(dashboardVals);
-							return res.view('private/applicant', dashboardVals);
+				    		
+				    		Source.find({status : 1}).exec(function (err, results) {
+				    		var ddlSource = results.map(function(a) {
+				    			return { 
+					    			id : a.id, 
+					    			name : a.name
+					    		};
+				    		});
+					    		var dashboardVals = { 
+					    			me : req.session.me, 
+					    			applicants : applicants,
+					    			ddlTieUp : ddlTieUp, 
+					    			ddlType : ddlType,
+					    			ddlCountry : ddlCountry,
+					    			ddlSource : ddlSource
+				    			};
+							    res.locals.layout = 'layout';
+								res.locals.title = 'Dashboard';
+								//console.log(dashboardVals);
+								return res.view('private/applicant', dashboardVals);
+				    		});
 			    		});
 			    	});
 		    	});

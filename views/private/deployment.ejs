@@ -5,7 +5,7 @@
 </div>
 <div id="export-report-deployment" class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Deployment Report</h1>
+        <h1 class="page-header">Applicant Status Report</h1>
         <ol class="breadcrumb">
             <li class="active">
                 Period from <%=headers.start%> to <%=headers.end%>
@@ -19,9 +19,11 @@
                     <tr>    
                         <th>Deployment Date</th>
                         <th>Reference No.</th>
+                        <th>Status</th>
                         <th>Name</th>
                         <th>Date of Birth</th>
                         <th>Passport No.</th>
+                        <th>Source</th>
                         <th>OEC</th>
                         <th>CG</th>
                         <th>PDOS</th>
@@ -57,9 +59,26 @@
                             <tr>
                               <td><%= report[i].date %></td>
                               <td><%= report[i].referenceNo %></td>
+                              <td>
+                                <% if (report[i].state === 0) { %>
+                                NEW
+                                <% } else if (report[i].state === 1) { %>
+                                DEPLOYED
+                                <% } else if (report[i].state === 2) { %>
+                                CANCELLED
+                                <% } else if (report[i].state === 3) { %>
+                                TERMINATED
+                                <% } %>
+                              </td>
                               <td><%= report[i].name %></td>
                               <td><%= report[i].dateOfBirth %></td>
                               <td><%= report[i].passportNo %></td>
+                              <td><% 
+                              if (typeof report[i].source !== 'undefined') {
+                                  %><%= report[i].source %><%
+                              } else {
+                                  %>N/A<%
+                              }%></td>
                               <td><%= report[i].oec %></td>
                               <td><%= report[i].cg %></td>
                               <td><%= report[i].pdos %></td>

@@ -35,6 +35,11 @@ module.exports = {
       unique: false
     },
     
+    source : { 
+      type: 'string', 
+      required: false,
+    },
+    
     oec : { 
       type: 'string', 
       unique: false
@@ -60,7 +65,7 @@ module.exports = {
     
     state : {
       type: 'integer',
-      enum: [0, 1], //0 - in progress, 1 - deployed
+      enum: [0, 1, 2, 3], //0 - New, 1 - deployed, 2 - cancelled, 3 - terminated
       defaultsTo : 0,
       required: true
     },
@@ -71,6 +76,10 @@ module.exports = {
     
     country : { 
       type: 'string',
+    },
+    
+    remarks : {
+      type: 'string'
     },
     
     status : {
