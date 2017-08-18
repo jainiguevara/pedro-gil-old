@@ -110,9 +110,9 @@ module.exports.routes = {
   'get /center/search' : 'CenterController.search',
   /* GET ACTIONS RE-ROUTES */
   //Command
-  // 'get /command' : '/',
-  // 'post /command/create' : '/',
-  // 'post /command/update' : '/',
+  'get /command' : '/',
+  'post /command/create' : '/',
+  'post /command/update' : '/',
   //User
   'get /user' : '/',
   'get /user/create' : '/',
@@ -139,9 +139,9 @@ module.exports.routes = {
   'get /servicefee/create' : '/',
   'get /servicefee/update' : '/',
   //Type
-  // 'get /type' : '/',
-  // 'get /type/create' : '/',
-  // 'get /type/update' : '/',
+  'get /type' : '/',
+  'get /type/create' : '/',
+  'get /type/update' : '/',
   //Tie-Up
   'get /tieup' : '/',
   'get /tieup/create' : '/',

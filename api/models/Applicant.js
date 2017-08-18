@@ -123,14 +123,18 @@ module.exports = {
   beforeCreate: function (values, cb) {
     try {
     var date = sails.config.globals.phDate;
-    var refNo = values.firstName.substring(0,1) + 
+    var refNo = "";
+     refNo = 
+    values.firstName.substring(0,1) + 
                 values.lastName.substring(0,1) + 
                 values.passportNo + 
-                date.getMonth() + 
-                date.getDay() + 
-                date.getYear() +
-                date.getHours() +
-                date.getMinutes();
+                (date.getMonth() + 1).toString() + 
+                date.getDate().toString() + 
+                date.getFullYear().toString() +
+                date.getHours().toString() +
+                date.getMinutes().toString() +
+                date.getSeconds().toString();
+                
     values.referenceNo = refNo;
     values.createdAt = date;
     values.updatedAt = date;
